@@ -1,4 +1,3 @@
-# from data.utils import windows_alias_command_line
 from data import strings
 import os, sys
 
@@ -33,6 +32,7 @@ else: # other os
 # create .bat and .sh aliases files
 # Windows Setup
 if os.name == "nt": 
+  print("Windows setup: setting up all commands...")
   python_venv_full_path = os.path.join(os.getcwd(), strings.PYTHON_VENV_WIN)
 
 
@@ -51,6 +51,8 @@ if os.name == "nt":
   # windows echo off
   commands = "@echo off\n\n"
   # add commands here!
+  # pdf_commands command
+  commands += windows_alias_command_line(strings.PDF_COMMANDS, "comm_pdf_commands.py")
   # fname_format command
   commands += windows_alias_command_line(strings.FNAME_FORMAT_COMM, "comm_filename_format.py")
   # merge_pdf command
@@ -62,10 +64,12 @@ if os.name == "nt":
   # Write commands on commands.bat file
   with open(strings.COMMANDS_BAT, "w") as txtfile:
     txtfile.write(commands)
-
+  
+  print("Done!\n")
 
   # Regedit Part
   # path is inside \"...\" because in this way paths containing spaces are supported
+  print("Adding commands to regedit AutoRun...")
   commands_bat_full_path_str = f'\\"{os.path.join(os.getcwd(), strings.COMMANDS_BAT)}\\"'
 
   # add automatically commands.bat file to regedit AutoRun Value in Command Processor
@@ -111,6 +115,7 @@ if os.name == "nt":
   # print(concatenated_paths)
   os.system(f'reg add "HKLM\\SOFTWARE\\Microsoft\\Command Processor" /v AutoRun /t REG_SZ /d "{concatenated_paths}" /f')
 
+  print("Done!\n")
 
 
 

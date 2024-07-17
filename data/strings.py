@@ -13,7 +13,7 @@ COMMANDS_SH = os.path.join(DATA_FOLDER, "commands.sh")
 
 
 
-# command aliases
+# command aliases names
 PDF_COMMANDS = "pdf_commands"
 FNAME_FORMAT_COMM = "fname_format"
 MERGE_PDF_COMM = "merge_pdf"
