@@ -41,8 +41,8 @@ def windows_alias_command_line(command_name:str, filename_py:str, args:str="") -
 if os.name == "nt":
   # windows echo off
   commands = "@echo off\n\n"
-  # pw.add command
-  # commands += windows_alias_command_line("proviamo", "pw_add.py")
+  # fname_format command
+  commands += windows_alias_command_line(strings.FNAME_FORMAT_COMM, "comm_filename_format.py")
   
 
   
@@ -52,7 +52,7 @@ if os.name == "nt":
 
 
   # Regedit Part
-  # add two "" for being sure that paths that contain spaces will be supported (in regedit it will write exactly "path" with one ")
+  # path is inside \"...\" because in this way paths containing spaces are supported
   commands_bat_full_path_str = f'\\"{os.path.join(os.getcwd(), strings.COMMANDS_BAT)}\\"'
 
   # add automatically commands.bat file to regedit AutoRun Value in Command Processor
@@ -75,7 +75,7 @@ if os.name == "nt":
       paths_in_line = line[21:].strip()
       if paths_in_line == "": # case: no paths
         paths = []
-      elif " & " in paths_in_line: # case: more than a path
+      elif "&" in paths_in_line: # case: more than a path
         paths = paths_in_line.split("&")
       else: # case: a single path
         paths = [paths_in_line]
@@ -95,7 +95,7 @@ if os.name == "nt":
 
   # join all paths separated by &
   concatenated_paths = " & ".join(paths)
-  print(concatenated_paths)
+  # print(concatenated_paths)
   os.system(f'reg add "HKLM\\SOFTWARE\\Microsoft\\Command Processor" /v AutoRun /t REG_SZ /d "{concatenated_paths}" /f')
 
 
