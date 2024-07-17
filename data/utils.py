@@ -34,8 +34,8 @@ def help_and_error(help_message:str, argv:list, argument_number:int=None, min_ar
 
 def must_end_with_pdf(fname: str) -> str:
   """
-    This function makes sure that input str 'fname'
-    ends or will be ending with ".pdf"
+  This function makes sure that input str 'fname'
+  ends or will be ending with ".pdf"
   """
   if not fname.endswith(".pdf"):
     return fname + ".pdf"

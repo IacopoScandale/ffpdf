@@ -2,6 +2,12 @@ from data import strings
 import os, sys
 
 
+# title
+print("=================================")
+print("||   INSTALLING PDF COMMANDS   ||")
+print("=================================",end="\n\n")
+
+
 # get the full path of this file
 this_file_full_path = os.path.abspath(__file__)
 # get full path of project folder
@@ -89,13 +95,12 @@ if os.name == "nt":
   for line in lines:
     if "AutoRun" in line:
       # get the list of all paths in value "AutoRun"
-      paths_in_line = line[21:].strip()
-      if paths_in_line == "": # case: no paths
+      paths = line[21:].strip().split("&")
+      # base case if no paths in regedit AutoRun: otherwise then " & ".join(paths)
+      # joins "" and break windows terminal
+      if paths == [""]:
         paths = []
-      elif "&" in paths_in_line: # case: more than a path
-        paths = paths_in_line.split("&")
-      else: # case: a single path
-        paths = [paths_in_line]
+      
       
   # if a path starts and ends with ", we must add \ in front of "
   for i, path in enumerate(paths):
@@ -104,7 +109,9 @@ if os.name == "nt":
     path = path.strip()
     if path.startswith('"') and path.endswith('"'):
       # add \ in front of each "
-      paths[i] = f'\\"{path[1:-1]}\\"'
+      path = f'\\"{path[1:-1]}\\"'
+    # refresh path in paths list
+    paths[i] = path
 
   # add commands.bat file full path to the values
   if commands_bat_full_path_str not in paths:
