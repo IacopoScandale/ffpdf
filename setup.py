@@ -3,6 +3,14 @@ from data import strings
 import os, sys
 
 
+# get the full path of this file
+this_file_full_path = os.path.abspath(__file__)
+# get full path of project folder
+main_folder_full_path = os.path.dirname(this_file_full_path)
+# move to that directory
+os.chdir(main_folder_full_path)
+
+
 # create virtual environment
 if not os.path.exists("venv"):
   print("Creating Virtual Environment 'venv'")
@@ -15,7 +23,7 @@ print("Installing dependencies:")
 if os.name == "nt": # windows
   os.system(f"{strings.PIP_VENV_WIN} install -r requirements.txt")
   print("Done!\n")
-elif os.name == "posix": # linux
+elif os.name == "posix": # linux TODO
   os.system("")
   print("Done!\n")
 else: # other os
@@ -24,26 +32,31 @@ else: # other os
 
 # create .bat and .sh aliases files
 # Windows Setup
-python_venv_full_path = os.path.join(os.getcwd(), strings.PYTHON_VENV_WIN)
-
-def windows_alias_command_line(command_name:str, filename_py:str, args:str="") -> str:
-  """
-  Create windows command line for file comands.bat
-  Input:
-  - `filename_py:str` name of the python file to call
-  - `command_name:str` name of the alias
-  - `args:str=""` insert other default arguments (separated by a space) if needed
-  """
-  command_file_path = os.path.join(os.getcwd(), filename_py)
-  return f'doskey {command_name} = "{python_venv_full_path}" "{command_file_path}" {args} $*\n'
+if os.name == "nt": 
+  python_venv_full_path = os.path.join(os.getcwd(), strings.PYTHON_VENV_WIN)
 
 
-if os.name == "nt":
+  def windows_alias_command_line(command_name:str, filename_py:str, args:str="") -> str:
+    """
+    Create windows command line for file comands.bat
+    Input:
+    - `filename_py:str` name of the python file to call
+    - `command_name:str` name of the alias
+    - `args:str=""` insert other default arguments (separated by a space) if needed
+    """
+    command_file_path = os.path.join(os.getcwd(), filename_py)
+    return f'doskey {command_name} = "{python_venv_full_path}" "{command_file_path}" {args} $*\n'
+
+
   # windows echo off
   commands = "@echo off\n\n"
+  # add commands here!
   # fname_format command
   commands += windows_alias_command_line(strings.FNAME_FORMAT_COMM, "comm_filename_format.py")
-  
+  # merge_pdf command
+  commands += windows_alias_command_line(strings.MERGE_PDF_COMM, "comm_pdf_merge.py")
+  # slice_pdf command
+  commands += windows_alias_command_line(strings.SLICE_PDF_COMM, "comm_pdf_slicer.py")
 
   
   # Write commands on commands.bat file
@@ -118,5 +131,4 @@ else:
 
 
 
-
-
+print(f"PDF Commands Installed. Type '{strings.PDF_COMMANDS}' for more info")
