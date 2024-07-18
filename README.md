@@ -3,7 +3,7 @@ Some useful line commands to manage files, especially pdfs
 
 
 ## Install:
-It will automaticly install a virtual environment with dependencies included in `requirements.txt` file. Then it will create the file with aliases (depending by your os) and they will be always ready in your terminal.
+It will automaticly install a virtual environment with dependencies included in `requirements.txt` file. Then it will create the file with aliases (depending by your os) and they will be always ready to use in your terminal.
 
 ### Windows
 Double click on `setup.bat` file and give administration permissions, otherwise open terminal **as administrator!** and execute `setup.py` file.

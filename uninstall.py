@@ -1,5 +1,5 @@
 from data.strings import COMMANDS_BAT, COMMANDS_SH
-import os, sys
+import os
 
 # title
 print("=================================")
