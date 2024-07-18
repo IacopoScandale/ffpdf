@@ -92,6 +92,7 @@ if os.name == "nt":
   # delete the tmp file
   os.remove(tmp_file_path)
   # find existing paths
+  paths = []
   for line in lines:
     if "AutoRun" in line:
       # get the list of all paths in value "AutoRun"
