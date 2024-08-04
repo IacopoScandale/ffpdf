@@ -1,5 +1,5 @@
 from data import strings
-import os, sys
+import os, sys, json
 
 
 # title
@@ -21,6 +21,17 @@ if not os.path.exists("venv"):
   print("Creating Virtual Environment 'venv'")
   os.system(f"{sys.executable} -m venv venv")  
   print("Done!\n")
+
+
+# create json usage counter file
+counter_file_path = os.path.join(strings.DATA_FOLDER, strings.COUNTER_JSON)
+with open(counter_file_path, "w") as jsonfile:
+  usage_counter = dict()
+  # set every command usage counter to 0
+  for comm in strings.COMMAND_LIST:
+    usage_counter[comm] = 0
+  # save changes
+  json.dump(usage_counter, jsonfile, indent=2)
 
 
 # install from requirements.txt

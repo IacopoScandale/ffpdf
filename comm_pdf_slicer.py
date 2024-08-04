@@ -1,4 +1,4 @@
-from data.utils import help_and_error
+from data.utils import help_and_error, add_one_to_counter
 from data.strings import SLICE_PDF_COMM
 from PyPDF2 import PdfReader, PdfWriter
 import os, sys
@@ -186,3 +186,7 @@ selected_pages = selected_pages_decision()
 output_pdf = out_pdf_name_decision()
 
 extract_pages(pdf_name, output_pdf, selected_pages)
+
+
+# +1 to usage counter
+add_one_to_counter(SLICE_PDF_COMM)

@@ -1,4 +1,4 @@
-from data.utils import help_and_error
+from data.utils import help_and_error, add_one_to_counter
 from data.strings import FNAME_FORMAT_COMM
 import os, sys
 
@@ -72,3 +72,7 @@ if choice in "sSyY":
   # and cannot be renamed (otherwise they will be overwrited)
   if no_action:
     print("0 files renamed")
+
+
+# +1 to usage counter
+add_one_to_counter(FNAME_FORMAT_COMM)

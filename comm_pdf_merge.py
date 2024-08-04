@@ -1,4 +1,4 @@
-from data.utils import help_and_error, must_end_with_pdf
+from data.utils import help_and_error, must_end_with_pdf, add_one_to_counter
 from data.strings import MERGE_PDF_COMM
 from PyPDF2 import PdfReader, PdfWriter
 import sys, os
@@ -71,3 +71,7 @@ for pdf in pdf_list:
 
 with open(output_name, "wb") as f:
   writer.write(f)
+
+
+# +1 to usage counter
+add_one_to_counter(MERGE_PDF_COMM)
