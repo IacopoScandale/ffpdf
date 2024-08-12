@@ -1,4 +1,5 @@
 from data.strings import COUNTER_JSON_NAME
+from typing import NoReturn
 import os, sys, json
 
 def help_and_error(help_message:str, argv:list, argument_number:int=None, min_arg_number:int=0, command_name:str="command_name") -> None:
@@ -35,7 +36,7 @@ def help_and_error(help_message:str, argv:list, argument_number:int=None, min_ar
 
 def must_end_with_pdf(fname: str) -> str:
   """
-  This function makes sure that input str 'fname'
+  This function makes sure that input str `fname`
   ends or will be ending with ".pdf"
   """
   if not fname.endswith(".pdf"):
@@ -71,3 +72,37 @@ def add_one_to_counter(command_name) -> None:
   # save progress
   with open(full_path_counter_json, "w") as jsonfile:
     json.dump(counter_json, jsonfile, indent=2)
+
+
+def choose_out_pdf_name() -> str | NoReturn:
+  """
+  This function lets you choose a pdf output name.
+  - If the name already exists then it asks you whether to overvrite it.
+    If your choice is No then it restarts so you can choose another name
+  - If you want to exit just throw an KeyboardInterrupt exception just pressing Ctrl+c
+    on terminal
+
+  ## Output
+  `str` with a pdf name (that will end with '.pdf')
+
+  """
+  while True:
+    try:
+      pdf_name: str = must_end_with_pdf(input("\nEnter output filename (it may or may not end with '.pdf')\n(press Ctrl+c (^C signal interrupt) to exit): "))
+      # if the file already exists ask what to do
+      if os.path.isfile(pdf_name):
+        print(f"\nWarning: file '{pdf_name}' already exists,")
+        overwrite_choice: str = input("do you want to overwrite it?\n[y,N]: ")
+        # choice with No as default (because "" in "nN" is True)
+        if overwrite_choice in "nN":
+          pass
+        elif overwrite_choice in "sSyY":
+          return pdf_name
+        
+      else:
+        return pdf_name
+
+    # if user interrupts
+    except KeyboardInterrupt:
+      print()
+      sys.exit()

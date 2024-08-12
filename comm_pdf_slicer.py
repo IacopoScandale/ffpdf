@@ -1,4 +1,4 @@
-from data.utils import help_and_error, add_one_to_counter
+from data.utils import help_and_error, add_one_to_counter, choose_out_pdf_name
 from data.strings import SLICE_PDF_COMM
 from PyPDF2 import PdfReader, PdfWriter
 import os, sys
@@ -30,7 +30,7 @@ page_number = num_pages(pdf_name)
 print(f"\n  ('{pdf_name}' with {page_number} pages)")
 
 
-def slice_to_list(intervals: str) -> list:
+def slice_to_list(intervals: str) -> list[int]:
   """
     This function converts a str "slice" into the list with all "page numbers"
   """
@@ -86,90 +86,26 @@ def slice_to_list(intervals: str) -> list:
   return res
 
 
-def selected_pages_decision() -> list:
+def selected_pages_decision() -> list[int]:
   """
   This function does not stop until you decide what to do:
    1) you insert a VALID "slice"
-   2) you exit by typing "--exit"
+   2) you exit by typing signal interrtupt (^C) pressing Ctrl+c
   """
-  res = input("\n· Insert a slice for the pdf:\n  (type '--exit' to quit): ")
   
-  if res == "--exit":
-    sys.exit()
-  else:
-    try:
-      return slice_to_list(res)
-    except:
-      return selected_pages_decision()
-
-
-# funcion for adding ".pdf" when it is necessary
-def must_end_with_pdf(fname: str) -> str:
-  """
-    This function makes sure that input str 'fname'
-    ends or will be ending with ".pdf"
-  """
-  if not fname.endswith(".pdf"):
-    return fname + ".pdf"
-  return fname
-
-
-def out_pdf_name_decision() -> str:
-  """
-    This function and next_decision let you decide what to do
-    1) you exit by typing "--exit"
-    2) you overwrite the file
-    3) you choose an other name 
-
-    Output: "out_name.pdf"
-  """
-  res = input("\n· Insert a name for the output pdf (it may or may not end with '.pdf'):\n  (type '--exit' to quit): ")
-
-  if res == "--exit":
-    sys.exit()
-  else:
-    cur_out_name = must_end_with_pdf(res)
-  
-    if os.path.isfile(cur_out_name):
-      return next_decision(must_end_with_pdf(res))
-    else:
-      return cur_out_name
-    
-
-def next_decision(tmp_name: str) -> str:
-  """
-    This function takes in input an "non valid" name ending
-    with .pdf and asks you what to do with it.
-    
-    This function does not stop until you decide what to do:
-    1) you exit by typing "--exit"
-    2) you overwrite the file
-    3) you choose an other name
-
-    oss: tmp_name ends with '.pdf'
-  """
-  decision = input(f"\n  Warning: '{tmp_name}' already exists. Do you want to overwrite it?\n  (type '--exit' to quit)\n  [y,n]: ")
-  
-  if decision == "--exit":
+  try:
+    res = input("\n· Insert a slice for the pdf:\n  (press Ctrl+c ('^C') to exit): ")
+  except KeyboardInterrupt:
+    print()
     sys.exit()
 
-  elif decision == "y" or decision == "Y":
-    return tmp_name
+  try:
+    return slice_to_list(res)
+  except:
+    return selected_pages_decision()
   
-  elif decision == "n" or decision == "N":
-    new_name = input("\n  Insert a new name: ")
-    new_name = must_end_with_pdf(new_name)
 
-    if os.path.isfile(new_name):
-      return next_decision(new_name)
-    else:
-      return new_name
-    
-  else:
-    return next_decision(tmp_name)
-
-
-def extract_pages(input_path, output_path, page_numbers):
+def extract_pages(input_path:str, output_path:str, page_numbers) -> None:
   with open(input_path, 'rb') as input_file:
     pdf_reader = PdfReader(input_file)
     pdf_writer = PdfWriter()
@@ -182,8 +118,10 @@ def extract_pages(input_path, output_path, page_numbers):
       pdf_writer.write(output_file)
 
 
-selected_pages = selected_pages_decision()
-output_pdf = out_pdf_name_decision()
+selected_pages: list[int] = selected_pages_decision()
+output_pdf: str = choose_out_pdf_name()
+
+
 
 extract_pages(pdf_name, output_pdf, selected_pages)
 
