@@ -1,13 +1,15 @@
 from data.utils import help_and_error, add_one_to_counter, choose_out_pdf_name
 from data.strings import SLICE_PDF_COMM
 from PyPDF2 import PdfReader, PdfWriter
-import os, sys
+import sys
 
 help_message = f"""
 This program takes in input a pdf file name (in the current folder).
 1. It then asks you to type the slice you want e.g. '1-5,7'
-2. It also asks you the output_pdf_name that can or cannot end with '.pdf'.
-3. It will create a pdf output file with only the pages 1 to 5 and the page 7
+2. It also asks you the output_pdf_name that can or cannot end with
+   '.pdf'.
+3. It will create a pdf output file with only the pages 1 to 5 and the
+   page 7
 
 USAGE: {SLICE_PDF_COMM} <input.pdf>
 """
@@ -32,13 +34,16 @@ print(f"\n  ('{pdf_name}' with {page_number} pages)")
 
 def slice_to_list(intervals: str) -> list[int]:
   """
-    This function converts a str "slice" into the list with all "page numbers"
+  This function converts a str "slice" into the list with all 
+  "page numbers"
   """
   def buck_interval_error(buck):
-    raise ValueError(f"'{buck}' in '{intervals}' is not correct. Expexted 'a-b' with a,b positive numbers, a<=b")
+    raise ValueError(f"'{buck}' in '{intervals}' is not correct. "
+                      "Expexted 'a-b' with a,b positive numbers, a<=b")
 
   def buck_error(buck):
-    raise ValueError(f"'{buck}' in '{intervals}' is not correct. Expexted a natural number")
+    raise ValueError(f"'{buck}' in '{intervals}' is not correct. "
+                      "Expexted a natural number")
   
   if "," not in intervals:
     if "-" in intervals:
@@ -94,14 +99,16 @@ def selected_pages_decision() -> list[int]:
   """
   
   try:
-    res = input("\n· Insert a slice for the pdf:\n  (press Ctrl+c ('^C') to exit): ")
+    res: str = input("\n· Insert a slice for the pdf:"
+                     "\n  (press Ctrl+c ('^C') to exit): ")
   except KeyboardInterrupt:
     print()
     sys.exit()
 
   try:
     return slice_to_list(res)
-  except:
+  except ValueError as e:
+    print(f"\n  Error:\n  {e}\n  try again...")
     return selected_pages_decision()
   
 
@@ -121,10 +128,7 @@ def extract_pages(input_path:str, output_path:str, page_numbers) -> None:
 selected_pages: list[int] = selected_pages_decision()
 output_pdf: str = choose_out_pdf_name()
 
-
-
 extract_pages(pdf_name, output_pdf, selected_pages)
-
 
 # +1 to usage counter
 add_one_to_counter(SLICE_PDF_COMM)

@@ -1,19 +1,21 @@
 from data.utils import help_and_error, add_one_to_counter
 from data.strings import FNAME_FORMAT_COMM
-import os, sys
+import os
+import sys
 
 help_message = f"""
-This program when run in a folder by terminal, asks if it can rename all files as it follows:
+This program when run in a folder by terminal, asks if it can rename all
+files as it follows:
 1. all letters --> lowercase letter
 2. all spaces  --> underscores
 
 USAGE: {FNAME_FORMAT_COMM}
  
 oss)
-In linux is possible to call two files for example "Ciao.txt" and "CiAo.txt".
-In this case the program renames the first file and not the second (because it
-will overwrite the other) and prints an error message.
-In windows this is not possible.
+In linux is possible to call two files for example "Ciao.txt" and 
+"CiAo.txt". In this case the program renames the first file and not the
+second (because it will overwrite the other) and prints an error
+message. In windows this is not possible.
 
 oss)
 This program prints always a message and explains what it is doing.
@@ -37,7 +39,6 @@ def format(fname: str) -> str:
     else:
       s = s + char
   return s
-
 
 
 no_action = True

@@ -1,5 +1,7 @@
 from data import strings
-import os, sys, json
+import os
+import sys
+import json
 
 
 # title

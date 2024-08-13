@@ -4,8 +4,9 @@ from PyPDF2 import PdfReader, PdfWriter
 import sys
 
 help_message = f"""
-This program when run in a folder by terminal merges all the pdfs in input in one single
-pdf file. The output file will be called as specified later in another input.
+This program when run in a folder by terminal merges all the pdfs in 
+input in one single pdf file. The output file will be called as 
+specified later in another input.
 
 USAGE:   {MERGE_PDF_COMM} <f1.pdf f2.pdf ... fn.pdf>
 EXAMPLE: {MERGE_PDF_COMM} in1.pdf in2.pdf in3.pdf
@@ -14,8 +15,12 @@ HELP:    {MERGE_PDF_COMM} --help
 oss) case covered if output filename does not end with ".pdf"
 """
 
-
-help_and_error(help_message, sys.argv, command_name=MERGE_PDF_COMM, min_arg_number=1)
+help_and_error(
+  help_message, 
+  sys.argv, 
+  command_name=MERGE_PDF_COMM, 
+  min_arg_number=1
+)
 
 pdf_list = sys.argv[1:]
 output_pdf_name: str = choose_out_pdf_name()
