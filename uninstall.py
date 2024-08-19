@@ -1,94 +1,84 @@
-from data.strings import COMMANDS_BAT, COMMANDS_SH
+from pdf_commands.data.strings import *
+import subprocess
 import os
 
-# title
-print("=================================")
-print("||   UNINSTALL PDF COMMANDS    ||")
-print("=================================",end="\n\n")
 
-# info
-print("This uninstaller is going only to un-do 'setup.py' (except deleting venv)")
-print("Then just delete this folder for completely remove PDF Commands")
+def print_path(path: str) -> None:
+  paths: list[str] = path.split(os.pathsep)
+  for path in paths:
+    print(path)
 
 
-# get the full path of this file
-this_file_full_path = os.path.abspath(__file__)
-# get full path of project folder
-main_folder_full_path = os.path.dirname(this_file_full_path)
-# move to that directory
-os.chdir(main_folder_full_path)
+def remove_folder(folder: str) -> None:
+  """
+  Recursively deletes a folder and all folders and files inside
+  """
+  if os.name == "nt":
+    command: str = 'rmdir /s /q "{folder}"'
+  elif os.name == "posix":
+    command: str = 'rm -rf {folder}'
+  else:
+    raise OSError(f"your os {os.name} is not supported")
+
+  os.system(command.format(folder=folder))
 
 
-# windows
-if os.name == "nt": 
-  # commands.bat full path
-  # add one " for being sure that paths that contain spaces will be supported (in regedit it will write exactly "path" with one ")
-  commands_bat_full_path_str = f'\\"{os.path.join(os.getcwd(), COMMANDS_BAT)}\\"'
+def remove_paths_from_PATH(path_to_remove: str) -> None:
+  """
+  Removes `path_to_remove` from local PATH variable
+  """
+  # current_PATH: str = os.environ.get('PATH', '')
+  # print_path(current_PATH)
+  # input()
+  if os.name == "nt":
+    get_user_path_command: str = "reg query HKCU\\Environment /v PATH"
+    overwrite_path_command: str = 'setx PATH "{path_content}"'
+  elif os.name == "posix":
+    get_user_path_command: str = ""
+    overwrite_path_command: str = ""
+    raise NotImplementedError
+  else:
+    raise OSError(f"your os {os.name} is not supported")
 
-  # get regedit AutoRun paths Values in Command Processor
-  tmp_file_path = "tmp.txt"
-  os.system(f'reg query "HKLM\\SOFTWARE\\Microsoft\\Command Processor" /v AutoRun > "{tmp_file_path}"')
+  # get only user path
+  result = subprocess.run(
+    get_user_path_command, 
+    capture_output=True, 
+    text=True,  # ensure str as output
+    shell=True
+  )
+  output = result.stdout
+  for line in output.splitlines():
+    if "PATH" in line:
+      user_PATH: str = line.split("    ")[-1]
 
-  # read tmpfile and get all paths in AutoRun
-  with open(tmp_file_path, "r") as txtfile:
-    lines = txtfile.readlines()
-  # delete the tmp file
-  os.remove(tmp_file_path)
-  # find existing paths
-  for line in lines:
-    if "AutoRun" in line:
-      # get the list of all paths in value "AutoRun"
-      paths = line[21:].strip().split("&")
-
-
-  # if a path starts and ends with ", we must add \ in front of "
-  for i, path in enumerate(paths):
-    # strip every path: it could contain spaces because we are splitting with "&"
-    # but each path could be separated with " & "
-    path = path.strip()
-    if path.startswith('"') and path.endswith('"'):
-      # add \ in front of each "
-      path = f'\\"{path[1:-1]}\\"'
-    # refresh path in paths list
-    paths[i] = path
-
-      
-  # remove commands.bat file full path from the values
-  if paths != [""]:
-    paths.remove(commands_bat_full_path_str)
-
-  # join all paths separated by &
-  concatenated_paths = " & ".join(paths)
-  # print(concatenated_paths)
-  os.system(f'reg add "HKLM\\SOFTWARE\\Microsoft\\Command Processor" /v AutoRun /t REG_SZ /d "{concatenated_paths}" /f')
-
-  # delete `commands.bat`
-  if os.path.exists(COMMANDS_BAT):
-    os.remove(COMMANDS_BAT)
+  # add path and update variable
+  paths: list[str] = user_PATH.split(os.pathsep)
+  paths = [p for p in paths if p != path_to_remove]
+  new_PATH: str = os.pathsep.join(paths)
+  
+  os.system(overwrite_path_command.format(path_content=new_PATH))
 
 
 
 
+if __name__ == "__main__":
+  # title
+  print("=================================")
+  print("||   UNINSTALL PDF COMMANDS    ||")
+  print("=================================",end="\n\n")
 
+  here: str = os.path.dirname(os.path.abspath(__file__))
+  os.chdir(here)
 
-# linux
-elif os.name == "posix":
+  # remove directories
+  if os.path.exists(COMMANDS_COPY_FOLDER):
+    remove_folder(COMMANDS_COPY_FOLDER)
+  if os.path.exists(VENV_FOLDER):
+    remove_folder(VENV_FOLDER)
+  if os.path.exists(INFO_FOLDER):
+    remove_folder(INFO_FOLDER)
 
-
-
-
-
-
-
-
-
-
-
-  # delete `commands.bat`
-  os.remove(COMMANDS_BAT)
-  # TODO
-
-
-
-else:
-  raise OSError(f"Your os {os.name} is not supported")
+  # remove Commands from PATH
+  path_to_remove: str = os.path.join(here, COMMANDS_COPY_FOLDER)
+  remove_paths_from_PATH(path_to_remove)

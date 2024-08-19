@@ -1,4 +1,5 @@
 venv
 __pycache__
-data/commands.bat
-data/usage_counter.json
+pdf_commands/data/usage_counter.json
+Commands
+pdf_commands.egg-info
