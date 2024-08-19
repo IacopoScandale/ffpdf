@@ -63,11 +63,6 @@ def remove_paths_from_PATH(path_to_remove: str) -> None:
 
 
 if __name__ == "__main__":
-  # title
-  print("=================================")
-  print("||   UNINSTALL PDF COMMANDS    ||")
-  print("=================================",end="\n\n")
-
   here: str = os.path.dirname(os.path.abspath(__file__))
   os.chdir(here)
 

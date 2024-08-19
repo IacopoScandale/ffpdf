@@ -15,19 +15,15 @@ def must_end_with_pdf(fname: str) -> str:
   return fname
 
 
-def add_one_to_counter(command_name) -> None:
+def add_one_to_counter(command_name: str) -> None:
   """
   Call this function at the end of a command_file.py to
   add +1 usage to the counter. This counter will save
   how many times we use that command
   """
-  # get the full path of this file
-  this_file_full_path = os.path.abspath(__file__)
-  # get full path of data folder
-  main_folder_full_path = os.path.dirname(this_file_full_path)
-  # counter file full_path
-  full_path_counter_json = os.path.join(main_folder_full_path, 
-                                        COUNTER_JSON_NAME)
+  here: str = os.path.dirname(os.path.abspath(__file__))
+  full_path_counter_json: str = os.path.join(here, COUNTER_JSON_NAME)
+
   # create file if it does not exists
   if not os.path.exists(full_path_counter_json):
     print(f"Error: missing file {full_path_counter_json}")
@@ -35,7 +31,7 @@ def add_one_to_counter(command_name) -> None:
 
   with open(full_path_counter_json, "r") as jsonfile:
     # load dictionary
-    counter_json = json.load(jsonfile)
+    counter_json: dict[str,int] = json.load(jsonfile)
   # add +1 to the frequency dictionary
   if command_name not in counter_json:
     counter_json[command_name] = 1

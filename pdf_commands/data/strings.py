@@ -9,7 +9,6 @@ VENV_FOLDER: str = "venv"
 VENV_SCRIPTS_FOLDER_WIN: str = os.path.join(VENV_FOLDER, "Scripts")
 VENV_SCRIPTS_FOLDER_LINUX: str = os.path.join(VENV_FOLDER, "bin")
 
-
 COUNTER_JSON_NAME: str = "usage_counter.json"
 COUNTER_JSON: str = os.path.join(DATA_FOLDER, COUNTER_JSON_NAME)
 
