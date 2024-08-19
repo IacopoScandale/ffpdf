@@ -1,27 +1,33 @@
 # PDF Commands
-Some useful line commands to manage files, especially pdfs
+
+> package name: *pdf_commands*
+
+Some useful line commands to manage files, especially pdfs.
 
 
-## Install:
-It will automaticly install a virtual environment with dependencies included in `requirements.txt` file. Then it will create the file with aliases (depending by your os) and they will be always ready to use in your terminal.
+# Download
+Recommended install is by executing install files respectively .bat for windows and ??? for linux. 
 
-### Windows
-Double click on `setup.bat` file and give administration permissions, otherwise open terminal **as administrator!** and execute `setup.py` file.
+This will install this package and dependencies in a virtual environment. Then all commands will be put in Commands folder that will automaticly added to path variable. In this way commands will always loaded on terminal. All this is done in the scrypt `post_install.py`. 
 
-> oss: administrator powers are needed for accessing to regedit. In this way commands will be always loaded on terminal
+If you only want to install the package, just use this command inside the package folder: 
+``` 
+pip install -e .
+```
 
-### Linux
+## Windows
+Just double click on `setup.bat` file. If you want to uninstall just double click on `uninstall.bat` file. Easy peasy.
+
+## Linux
+work in progress
 
 
-
-
-
-
-
-## Commands:
-* `pdf_commands`: shows all commands
-* `fname_format`: format all file names within a folder
-* `merge_pdf`: merges all pdfs passed as arguments
-* `slice_pdf`: slice a pdf according to given slice
+# Commands:
+|command|description|
+|-|-|
+|`pdf_commands`|shows all commands|
+|`fname_format`|format all file names within a folder|
+|`merge_pdf`|merges all pdfs passed as arguments|
+|`slice_pdf`|slice a pdf according to given slice|
 
 Type `command_name -h` or `command_name --help` for more info
