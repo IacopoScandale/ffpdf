@@ -11,7 +11,6 @@ echo.
 echo installing dependencies in virtual environment ...
 call venv\Scripts\activate
 pip install -e .
-call venv\Scripts\deactivate
 
 python post_install.py
 echo Done!
