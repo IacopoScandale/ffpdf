@@ -23,10 +23,14 @@ def get_arguments() -> Namespace:
 
 def format_filename(filename: str) -> str:
   """
-  Returns lowercase `filename` string with "_" instead of spaces
+  Returns lowercase `filename` string with "_" instead of spaces.
+  Then if the string contains this pattern "_-_", it will be replaced
+  only with "_".
   """
-  return filename.replace(" ", "_").lower()
-
+  formatted_filename: str = filename.replace(" ", "_")
+  formatted_filename = formatted_filename.lower()
+  formatted_filename = formatted_filename.replace("_-_","_")
+  return formatted_filename
 
 def main() -> None:
   # treat command as command
