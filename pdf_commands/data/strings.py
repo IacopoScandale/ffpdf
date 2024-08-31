@@ -27,3 +27,16 @@ COMMANDS: dict[str,str] = {
 """
 Maps command name to the name of the python file it executes
 """
+
+
+
+
+BIN_PATH_LINUX: str = "/usr/local/bin"
+"""
+Linux full path where to put binaries (already on PATH)
+"""
+EXE_PATH_WIN: str = NotImplemented
+"""
+Windows full path where to put binaries (already on PATH)
+"""
+

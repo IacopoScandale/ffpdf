@@ -66,14 +66,21 @@ if __name__ == "__main__":
   here: str = os.path.dirname(os.path.abspath(__file__))
   os.chdir(here)
 
-  # remove directories
-  if os.path.exists(COMMANDS_COPY_FOLDER):
-    remove_folder(COMMANDS_COPY_FOLDER)
   if os.path.exists(VENV_FOLDER):
     remove_folder(VENV_FOLDER)
-  if os.path.exists(INFO_FOLDER):
-    remove_folder(INFO_FOLDER)
 
-  # remove Commands from PATH
-  path_to_remove: str = os.path.join(here, COMMANDS_COPY_FOLDER)
-  remove_paths_from_PATH(path_to_remove)
+  if os.name == "nt":
+    if os.path.exists(COMMANDS_COPY_FOLDER):
+      remove_folder(COMMANDS_COPY_FOLDER)
+    if os.path.exists(INFO_FOLDER):
+      remove_folder(INFO_FOLDER)
+
+    # remove Commands from PATH
+    path_to_remove: str = os.path.join(here, COMMANDS_COPY_FOLDER)
+    remove_paths_from_PATH(path_to_remove)
+
+  elif os.name == "posix":
+    for bin in os.listdir(BIN_PATH_LINUX):
+      for command in COMMANDS.keys():
+        if bin == command:
+          os.remove(os.path.join(BIN_PATH_LINUX, command))

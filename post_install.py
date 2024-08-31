@@ -22,7 +22,7 @@ def add_path_to_PATH(path_to_add: str) -> None:
     overwrite_path_command: str = ""
     raise NotImplementedError
   else:
-    raise OSError(f"your os {os.name} is not supported")
+    raise OSError(f"your os {os.name} is not supported")                       
 
   # get only user path
   result = subprocess.run(
@@ -50,25 +50,26 @@ if __name__ == "__main__":
   here: str = os.path.dirname(os.path.abspath(__file__))
   os.chdir(here)
 
-  # create Commands folder
-  os.mkdir(COMMANDS_COPY_FOLDER)
-
   # create usage_counter.json file
   couter_file: str = os.path.join(here, PACKAGE_NAME, COUNTER_JSON)
   if not os.path.exists(couter_file):
     with open(couter_file, "w") as jsonfile:
       json.dump(dict(), jsonfile)
 
-  # add Commands folder full path to PATH
-  path_to_add: str = os.path.join(here, COMMANDS_COPY_FOLDER)
-  add_path_to_PATH(path_to_add)
-
-  # TODO create external function os indipendent like before
-  # windows:
-  # create copies (links do not work) to .exe commands files from 
-  # venv\Scripts in the main project folder\Commands and then add that 
-  # path to local PATH variable
   if os.name == "nt":
+    # create Commands folder
+    os.mkdir(COMMANDS_COPY_FOLDER)
+
+
+    # add Commands folder full path to PATH
+    path_to_add: str = os.path.join(here, COMMANDS_COPY_FOLDER)
+    add_path_to_PATH(path_to_add)
+
+    # TODO create external function os indipendent like before
+    # windows:
+    # create copies (links do not work) to .exe commands files from 
+    # venv\Scripts in the main project folder\Commands and then add that 
+    # path to local PATH variable
     for command in COMMANDS.keys():
       command_exe: str = f"{command}.exe"
       source_file: str = os.path.join(VENV_SCRIPTS_FOLDER_WIN, command_exe)
@@ -84,7 +85,18 @@ if __name__ == "__main__":
 
   # linux
   elif os.name == "posix":
-    raise NotImplementedError
 
+    # copy bin files from venv/bin to /usr/local/bin 
+    for command in COMMANDS.keys():
+      source_file: str = os.path.join(VENV_SCRIPTS_FOLDER_LINUX, command)
+      dest_file: str = os.path.join(BIN_PATH_LINUX, command)
+      
+      if not os.path.exists(dest_file):
+        with open(source_file, "rb") as source:
+          with open(dest_file, "wb") as dest:  # requires sudo
+            dest.write(source.read())
+
+        os.system(f"chmod +x {dest_file}")
+      
   else:
     raise OSError(f"your os {os.name} is not supported")

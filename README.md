@@ -19,7 +19,9 @@ pip install -e .
 Just double click on `setup.bat` file. If you want to uninstall just double click on `uninstall.bat` file. Easy peasy.
 
 ## Linux
-work in progress
+Navigate into this project folder and use the following command: `sudo ./setup.sh`
+
+In the same way run `sudo ./uninstall.sh` to un-do setup. Then you can simply remove the folder.
 
 
 # Commands:
