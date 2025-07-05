@@ -130,9 +130,16 @@ sudo cp .venv/bin/ffpdf /usr/local/bin/
 
 ### Windows
 An advice is to create the linux-equivalent `"%USERPROFILE%\.local\bin"` directory and then add it on user `PATH`.
+```sh
+# for current user:
 
-Otherwise you can copy the .exe file into some other folders that are already on `PATH`, as for example `"%USERPROFILE%\AppData\Local\Microsoft\WindowsApps\"`
-<!-- ```sh
-# current user
-copy .venv\Scripts\ffpdf.exe "%USERPROFILE%\AppData\Local\Microsoft\WindowsApps\"
-``` -->
+# create folder
+mkdir "%USERPROFILE%\.local\bin"
+
+# add it to user path
+# do it through windows settings to avoid problems...
+
+# copy the .exe file into it
+copy .venv\Scripts\ffpdf.exe "%USERPROFILE%\.local\bin\"
+```
+Otherwise you can copy the .exe file into some other folders that are already on `PATH`, as for example `"%USERPROFILE%\AppData\Local\Microsoft\WindowsApps\"`.
