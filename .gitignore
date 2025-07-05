@@ -1,5 +1,9 @@
-venv
+.venv
+.vscode
 __pycache__
-pdf_commands/data/usage_counter.json
-Commands
-pdf_commands.egg-info
+ffpdf.egg-info
+usage_counter.json
+src/test/*
+comm_format.py
+comm_raw.py
+TODO.md

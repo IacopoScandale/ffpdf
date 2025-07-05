@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ffpdf"
+version = "2025.07.05"
+description = "Fast PDF and Image File Operations"
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [{ name = "Iacopo Scandale", email = "iacopo.scandale.is@gmail.com" }]
+license = { file = "LICENSE" }
+dependencies = [
+    "pdf2image>=1.17.0",
+    "pillow>=11.2.1",
+    "pypdf2==3.0.1",
+    "rich>=14.0.0",
+]
+
+[project.scripts]
+ffpdf = "ffpdf.cli:main"
+
+[dependency-groups]
+dev = [
+    "ffpdf",
+]
+
+[tool.uv.sources]
+ffpdf = { workspace = true }

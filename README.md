@@ -1,35 +1,138 @@
-# PDF Commands
+# ffpdf
+## Fast PDF and Image File Operations
 
-> package name: *pdf_commands*
+<!-- Badges -->
+![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-yellow.svg)](https://www.gnu.org/licenses/gpl-3.0) ![Platform](https://img.shields.io/badge/platform-Linux,%20Windows,%20macOS-green) [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 
-Some useful line commands to manage files, especially pdfs.
+**ffpdf** is a command-line tool designed to easily perform file operations like merging PDFs or images, slicing PDFs, and converting between images and PDFs.
+
+## Table of Contents
+
+- [Commands](#commands)
+  - [Merge](#merge)
+  - [Slice](#slice)
+  - [Count](#count)
+  - [Convert](#convert)
+- [Download](#download)
+  - [1. Dependencies](#1-dependencies)
+    - [uv](#uv)
+    - [pip](#pip)
+  - [2. ffpdf bin file](#2-ffpdf-bin-file)
+    - [Linux and macOS](#linux-and-macos)
+    - [Windows](#windows)
+
+
+
+# Commands
+Show command usages
+```sh
+ffpdf
+
+Commands:              Times Used:
+——————————————————————————————————————
+   1. merge                     32
+   2. slice                     13
+   3. count                      9
+   4. convert                   15
+——————————————————————————————————————
+      Total:                    69
+```
+
+
+|Subcommand|Description|
+|-|-|
+|`merge`|Merge the input files (PDFs or images) in an output PDF|
+|`slice`|Extract pages from a PDF|
+|`count`|Count the pages of every PDF in input|
+|`convert`|Convert input files in the specified format (image or pdf)|
+
+## Examples
+### Merge
+Merge the input files (PDFs or images) in an output PDF
+```sh
+ffpdf merge a.pdf b.pdf -o ab.pdf
+```
+### Slice
+Extract pages from a PDF
+```sh
+ffpdf slice in.pdf 1,3,5-8 out.pdf
+
+# out.pdf has only the pages number 1,3,5,6,7,8 of the in.pdf
+```
+
+### Count
+Count the pages of every PDF in input
+```sh
+ffpdf count a.pdf
+
+Pages    Filename                   
+——————————————————————————————————————————————————
+    4    'a.pdf'                           
+```
+
+```sh
+ffpdf count *.pdf
+
+Pages    Filename                   
+——————————————————————————————————————————————————
+   42    'a.pdf'                                 
+    1    'b.pdf'                                 
+    0    'c.pdf' (empty file)
+    4    'd.pdf'                                        
+```
+### Convert
+Convert input files in the specified format (image or pdf)
+```sh
+ffpdf convert a.pdf b.jpg c.png -e .png
+
+Converted 'a.pdf' (4 pages) to '.png'
+Converted 'b.jpg' to 'b.jpg(3).png'
+Skipped   'c.png' (no conversion is needed)
+```
 
 
 # Download
-Recommended install is by executing install files respectively .bat for windows and ??? for linux. 
-
-This will install this package and dependencies in a virtual environment. Then all commands will be put in Commands folder that will automaticly added to path variable. In this way commands will always loaded on terminal. All this is done in the scrypt `post_install.py`. 
-
-If you only want to install the package, just use this command inside the package folder: 
-``` 
-pip install -e .
+## 1. Dependencies
+### [uv](https://github.com/astral-sh/uv)
+```sh
+uv sync
 ```
 
-## Windows
-Just double click on `setup.bat` file. If you want to uninstall just double click on `uninstall.bat` file. Easy peasy.
+### pip
+```sh
+# create virtual env
+python -m venv .venv
 
-## Linux
-Navigate into this project folder and use the following command: `sudo ./setup.sh`
+# activate env
+source .venv/bin/activate  # linux or mac
+.venv\Scripts\activate  # windows
 
-In the same way run `sudo ./uninstall.sh` to un-do setup. Then you can simply remove the folder.
+# install requirements
+pip install -r requirements.txt  # or pip install -e .
+```
 
+## 2. ffpdf bin file
+Once step 1. is done, the following bin file (the actual terminal command) will be created:
+```sh
+.venv/bin/ffpdf  # linux or mac
+.venv\Scripts\ffpdf.exe  # windows
+```
+To have it ready-to-use in every shell you should have to copy it and paste in a directory on `PATH`. The following directories are suggested, depending on your os:
 
-# Commands:
-|command|description|
-|-|-|
-|`pdf_commands`|shows all commands|
-|`fname_format`|format all file names within a folder|
-|`merge_pdf`|merges all pdfs passed as arguments|
-|`slice_pdf`|slice a pdf according to given slice|
+### Linux and macOS
+```sh
+# current user
+cp .venv/bin/ffpdf ~/.local/bin/
 
-Type `command_name -h` or `command_name --help` for more info
+# or system wide:
+sudo cp .venv/bin/ffpdf /usr/local/bin/
+```
+
+### Windows
+An advice is to create the linux-equivalent `"%USERPROFILE%\.local\bin"` directory and then add it on user `PATH`.
+
+Otherwise you can copy the .exe file into some other folders that are already on `PATH`, as for example `"%USERPROFILE%\AppData\Local\Microsoft\WindowsApps\"`
+<!-- ```sh
+# current user
+copy .venv\Scripts\ffpdf.exe "%USERPROFILE%\AppData\Local\Microsoft\WindowsApps\"
+``` -->
