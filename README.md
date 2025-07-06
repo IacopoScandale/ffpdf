@@ -97,7 +97,18 @@ Skipped   'c.png' (no conversion is needed)
 ```sh
 uv sync
 ```
+or
+```sh
+# create virtual env
+uv venv
 
+# activate env
+source .venv/bin/activate  # linux or mac
+.venv\Scripts\activate  # windows
+
+# install requirements
+uv pip install -e .  # -e for editable mode
+```
 ### pip
 ```sh
 # create virtual env
@@ -108,7 +119,7 @@ source .venv/bin/activate  # linux or mac
 .venv\Scripts\activate  # windows
 
 # install requirements
-pip install -r requirements.txt  # or pip install -e .
+pip install -e .  # -e for editable mode
 ```
 
 ## 2. ffpdf bin file
