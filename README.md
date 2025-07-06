@@ -6,20 +6,24 @@
 
 **ffpdf** is a command-line tool designed to easily perform file operations like merging PDFs or images, slicing PDFs, and converting between images and PDFs.
 
+
 ## Table of Contents
 
 - [Commands](#commands)
-  - [Merge](#merge)
-  - [Slice](#slice)
-  - [Count](#count)
-  - [Convert](#convert)
+  - [Examples](#examples)
+    - [Merge](#merge)
+    - [Slice](#slice)
+    - [Count](#count)
+    - [Convert](#convert)
 - [Download](#download)
-  - [1. Dependencies](#1-dependencies)
-    - [uv](#uv)
-    - [pip](#pip)
-  - [2. ffpdf bin file](#2-ffpdf-bin-file)
-    - [Linux and macOS](#linux-and-macos)
-    - [Windows](#windows)
+  - [Base Env (Easier)](#base-env-easier)
+  - [Virtual Env (Recommended)](#virtual-env-recommended)
+    - [1. Dependencies](#1-dependencies)
+      - [uv](#uv)
+      - [pip](#pip)
+    - [2. ffpdf bin file](#2-ffpdf-bin-file)
+      - [Linux and macOS](#linux-and-macos)
+      - [Windows](#windows)
 
 
 
@@ -92,8 +96,24 @@ Skipped   'c.png' (no conversion is needed)
 
 
 # Download
-## 1. Dependencies
-### [uv](https://github.com/astral-sh/uv)
+There are two different ways, choose one:
+- [Base Env (Easier)](#base-env-easier)
+- [Virtual Env (Recommended)](#virtual-env-recommended)
+
+## Base Env (Easier)
+You can install this package (if compatible with python version and other dependencies) in your main python installation with pip. Just open a shell in the main project and type:
+```sh
+pip install -e .  # -e for editable mode
+```
+Uninstall:
+```sh
+pip uninstall .
+```
+
+## Virtual Env (Recommended)
+
+### 1. Dependencies
+#### [uv](https://github.com/astral-sh/uv)
 ```sh
 uv sync
 ```
@@ -109,7 +129,7 @@ source .venv/bin/activate  # linux or mac
 # install requirements
 uv pip install -e .  # -e for editable mode
 ```
-### pip
+#### pip
 ```sh
 # create virtual env
 python -m venv .venv
@@ -122,7 +142,7 @@ source .venv/bin/activate  # linux or mac
 pip install -e .  # -e for editable mode
 ```
 
-## 2. ffpdf bin file
+### 2. ffpdf bin file
 Once step 1. is done, the following bin file (the actual terminal command) will be created:
 ```sh
 .venv/bin/ffpdf  # linux or mac
@@ -130,7 +150,7 @@ Once step 1. is done, the following bin file (the actual terminal command) will 
 ```
 To have it ready-to-use in every shell you should have to copy it and paste in a directory on `PATH`. The following directories are suggested, depending on your os:
 
-### Linux and macOS
+#### Linux and macOS
 ```sh
 # current user
 cp .venv/bin/ffpdf ~/.local/bin/
@@ -139,8 +159,8 @@ cp .venv/bin/ffpdf ~/.local/bin/
 sudo cp .venv/bin/ffpdf /usr/local/bin/
 ```
 
-### Windows
-An advice is to create the linux-equivalent `"%USERPROFILE%\.local\bin"` directory and then add it on user `PATH`.
+#### Windows
+An advice is to create the linux-equivalent: `"%USERPROFILE%\.local\bin"` directory and then add it on user `PATH`.
 ```sh
 # for current user:
 
