@@ -103,14 +103,17 @@ def expand_input_paths(paths: list[Path]) -> list[Path]:
     >>> expand_input_paths([Path("*.pdf")])
         [Path("a.pdf"), Path("b.pdf")]
     """
-    expanded: list[Path] = []
-    for p in paths:
-        if glob.has_magic(str(p)):
-            expanded.extend(Path(f) for f in glob.glob(str(p)))
-        else:
-            expanded.append(p)
+    if os.name == "posix":
+        return paths
+    elif os.name == "nt":
+        expanded: list[Path] = []
+        for p in paths:
+            if glob.has_magic(str(p)):
+                expanded.extend(Path(f) for f in glob.glob(str(p)))
+            else:
+                expanded.append(p)
 
-    return expanded
+        return expanded
 
 
 
