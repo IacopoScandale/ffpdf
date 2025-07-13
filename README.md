@@ -15,6 +15,7 @@
     - [Slice](#slice)
     - [Count](#count)
     - [Convert](#convert)
+    - [Img](#img)
 - [Download](#download)
   - [Base Env (Easier)](#base-env-easier)
   - [Virtual Env (Recommended)](#virtual-env-recommended)
@@ -49,6 +50,7 @@ Commands:              Times Used:
 |`slice`|Extract pages from a PDF|
 |`count`|Count the pages of every PDF in input|
 |`convert`|Convert input files in the specified format (image or pdf)|
+|`img`|Show relevant image infos for the input files|
 
 ## Examples
 ### Merge
@@ -69,20 +71,22 @@ Count the pages of every PDF in input
 ```sh
 ffpdf count a.pdf
 
-Pages    Filename                   
+Pages          Size    Filename
 ——————————————————————————————————————————————————
-    4    'a.pdf'                           
+    5       2.27 MB    'a.pdf'                          
 ```
 
 ```sh
 ffpdf count *.pdf
 
-Pages    Filename                   
+Pages          Size    Filename
 ——————————————————————————————————————————————————
-   42    'a.pdf'                                 
-    1    'b.pdf'                                 
-    0    'c.pdf' (empty file)
-    4    'd.pdf'                                        
+    5       2.27 MB    'a.pdf'                                        
+    5     875.49 KB    'b.pdf'                                        
+    0       0.00 B     'c.pdf' (empty file)
+    7     741.03 KB    'd.pdf'                                        
+——————————————————————————————————————————————————
+   17       3.84 MB    '4 files'                                       
 ```
 ### Convert
 Convert input files in the specified format (image or pdf)
@@ -94,6 +98,19 @@ Converted 'b.jpg' to 'b.jpg(3).png'
 Skipped   'c.png' (no conversion is needed)
 ```
 
+### Img
+Show relevant image infos for the input files
+```sh
+ffpdf img *.jpg
+
+      Size     Dimensions       Ratio    Filename
+——————————————————————————————————————————————————
+   0.00 B                                'a.jpg'
+   1.72 MB      4160×2336      130:73    'b.jpg'
+ 107.78 KB       1080×825       72:55    'c.jpg'
+—————————————————————————————————————————————————— 
+   1.83 MB                               '3 files'
+```
 
 # Download
 There are two different ways, choose one:

@@ -6,12 +6,14 @@ from .comm_merge import comm_merge
 from .comm_slice import comm_slice
 from .comm_count import comm_count
 from .comm_convert import comm_convert
+from .comm_img import comm_img_info
 from .data.strings import (
     DESCRIPTION,
     SUB_CONVERT,
     SUB_MERGE,
     SUB_SLICE,
     SUB_COUNT,
+    SUB_IMG,
 )
 
 
@@ -110,6 +112,18 @@ def parse_arguments() -> Namespace:
     )
 
 
+    # subcommand `img_info`
+    parser_img_info: ArgumentParser = subparsers.add_parser(
+        SUB_IMG,
+        description="Show relevant image infos for the input files"
+    )
+    parser_img_info.add_argument(
+        "in_files",
+        nargs="+",
+        type=Path,
+        help="Input pdf or img file(s)",
+    )
+
     args: Namespace = parser.parse_args()
     return args
 
@@ -131,5 +145,7 @@ def main() -> None:
     #     comm_raw(in_files=args.input, out_file=args.output)
     elif args.subcommand == SUB_CONVERT:
         comm_convert(args.in_files, args.extension)
+    elif args.subcommand == SUB_IMG:
+        comm_img_info(args.in_files)
     else:
         show_infos()

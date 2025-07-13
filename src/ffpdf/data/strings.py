@@ -15,6 +15,7 @@ SUBCOMMANDS: list[str] = [
     SUB_SLICE := "slice",
     SUB_COUNT := "count",
     SUB_CONVERT := "convert",
+    SUB_IMG := "img",
     # SUB_FORMAT := "format",
     # SUB_RAW := "raw",
 ]

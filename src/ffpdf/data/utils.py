@@ -1,3 +1,4 @@
+import glob
 import json
 import os
 import sys
@@ -78,12 +79,38 @@ def add_one_to_counter(command_name: str) -> None:
         json.dump(usage_counter, jsonfile, indent=2)
 
 
+def human_readable_size(size_bytes: int) -> str:
+    """
+    Examples
+    --------
+    >>> human_readable_size(2048)
+        '2.00 KB'
+
+    >>> human_readable_size(2_000_000)
+        '1.91 MB'
+    """
+    for unit in ["B ", "KB", "MB", "GB"]:
+        if size_bytes < 1024:
+            return f"{size_bytes:.2f} {unit}"
+        size_bytes /= 1024
+    return f"{size_bytes:.2f} TB"
 
 
+def expand_input_paths(paths: list[Path]) -> list[Path]:
+    """
+    Examples
+    --------
+    >>> expand_input_paths([Path("*.pdf")])
+        [Path("a.pdf"), Path("b.pdf")]
+    """
+    expanded: list[Path] = []
+    for p in paths:
+        if glob.has_magic(str(p)):
+            expanded.extend(Path(f) for f in glob.glob(str(p)))
+        else:
+            expanded.append(p)
 
-
-
-
+    return expanded
 
 
 

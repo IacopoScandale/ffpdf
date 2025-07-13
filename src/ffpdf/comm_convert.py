@@ -6,7 +6,7 @@ from PIL import Image, UnidentifiedImageError
 from rich import print
 
 from .data.strings import SUB_CONVERT
-from .data.utils import add_one_to_counter
+from .data.utils import add_one_to_counter, expand_input_paths
 
 
 def new_ext_filename(file: Path, ext: str) -> Path:
@@ -34,6 +34,8 @@ def comm_convert(
     in_files: list[Path],
     ext: str,
 ) -> None:
+    in_files: list[Path] = expand_input_paths(in_files)
+
     # make sure ext is lowercase and starts with a dot
     ext = ext.lower()
     if not ext.startswith("."):
