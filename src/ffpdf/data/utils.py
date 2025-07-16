@@ -116,6 +116,14 @@ def expand_input_paths(paths: list[Path]) -> list[Path]:
         return expanded
 
 
+def human_readable_dimensions(width: int, height: int) -> str:
+    h_dimensions: str = f"{width}×{height}"
+    return h_dimensions
+
+
+
+
+
 
 
 # old functions

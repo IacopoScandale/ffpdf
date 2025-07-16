@@ -1,8 +1,8 @@
 # ffpdf
-## Fast PDF and Image File Operations
+## Fast PDF, Image and Video File Operations
 
 <!-- Badges -->
-![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-yellow.svg)](https://www.gnu.org/licenses/gpl-3.0) ![Platform](https://img.shields.io/badge/platform-Linux,%20Windows,%20macOS-green) [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
+![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-yellow.svg)](https://www.gnu.org/licenses/gpl-3.0) ![Platform](https://img.shields.io/badge/platform-Linux,%20Windows,%20macOS-green) ![FFmpeg](https://img.shields.io/badge/dependency-ffmpeg-critical) [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 
 **ffpdf** is a command-line tool designed to easily perform file operations like merging PDFs or images, slicing PDFs, and converting between images and PDFs.
 
@@ -16,6 +16,7 @@
     - [Count](#count)
     - [Convert](#convert)
     - [Img](#img)
+    - [Vid](#vid)
 - [Download](#download)
   - [Base Env (Easier)](#base-env-easier)
   - [Virtual Env (Recommended)](#virtual-env-recommended)
@@ -25,6 +26,7 @@
     - [2. ffpdf bin file](#2-ffpdf-bin-file)
       - [Linux and macOS](#linux-and-macos)
       - [Windows](#windows)
+- [External Dependencies](#external-dependencies)
 
 
 
@@ -35,12 +37,15 @@ ffpdf
 
 Commands:              Times Used:
 ——————————————————————————————————————
-   1. merge                     32
-   2. slice                     13
-   3. count                      9
-   4. convert                   15
+   1. ffpdf                     33
+   2. merge                     32
+   3. slice                     14
+   4. count                     26
+   5. convert                   12
+   6. img                       81
+   7. vid                       22
 ——————————————————————————————————————
-      Total:                    69
+      Total:                   220
 ```
 
 
@@ -51,6 +56,7 @@ Commands:              Times Used:
 |`count`|Count the pages of every PDF in input|
 |`convert`|Convert input files in the specified format (image or pdf)|
 |`img`|Show relevant image infos for the input files|
+|`vid`|Show relevant video infos for the input files|
 
 ## Examples
 ### Merge
@@ -111,6 +117,21 @@ ffpdf img *.jpg
 —————————————————————————————————————————————————— 
    1.83 MB                               '3 files'
 ```
+
+### Vid
+Show relevant video infos for the input files (requires ffmpeg)
+```sh
+ffpdf vid *.mp4
+
+      Size     Dimensions  Duration   Framerate     Bitrate  Filename
+————————————————————————————————————————————————————————————————————————————————
+   1.31 GB       1280×720     13:20   29.97 fps     13 Mb/s  'VID_20240101_180705.mp4'     
+ 386.29 MB       1280×720     03:49    30.0 fps     13 Mb/s  'VID_20240211_213153.mp4'     
+  75.42 MB      1920×1080     00:31    30.0 fps     19 Mb/s  'VID_20241102_164408.mp4'     
+————————————————————————————————————————————————————————————————————————————————
+   1.76 GB                    17:40                          '3 files'
+```
+
 
 # Download
 There are two different ways, choose one:
@@ -191,3 +212,14 @@ mkdir "%USERPROFILE%\.local\bin"
 copy .venv\Scripts\ffpdf.exe "%USERPROFILE%\.local\bin\"
 ```
 Otherwise you can copy the .exe file into some other folders that are already on `PATH`, as for example `"%USERPROFILE%\AppData\Local\Microsoft\WindowsApps\"`.
+
+# External Dependencies
+`ffmpeg` is required for the `vid` command, but it is not mandatory for the other `ffpdf` commands.
+- **Linux / macOS:**
+  Example installation using *apt*:
+  ```sh
+  sudo apt install ffmpeg
+  ```
+- **Windows:**
+  Manual installation at https://ffmpeg.org/
+

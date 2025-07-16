@@ -6,12 +6,7 @@ from PIL import Image, UnidentifiedImageError
 from rich import print
 
 from .data.strings import SUB_IMG
-from .data.utils import add_one_to_counter, expand_input_paths, human_readable_size
-
-
-def human_readable_dimensions(width: int, height: int) -> str:
-    h_dimensions: str = f"{width}×{height}"
-    return h_dimensions
+from .data.utils import add_one_to_counter, expand_input_paths, human_readable_dimensions, human_readable_size
 
 
 def human_readable_ratio(width: int, height: int) -> str:
@@ -22,7 +17,7 @@ def human_readable_ratio(width: int, height: int) -> str:
     return h_ratio
 
 
-def comm_img_info(files: list[Path]) -> None:
+def comm_img(files: list[Path]) -> None:
     files: list[Path] = expand_input_paths(files)
 
     # print header

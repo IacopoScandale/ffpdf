@@ -1,11 +1,15 @@
 import json
+
 from rich import print
+
 from .data.strings import (
+    COMMAND,
+    DESCRIPTION,
     FILE_COUNTER_JSON,
     PACKAGE_NAME,
-    DESCRIPTION,
     SUBCOMMANDS,
 )
+from .data.utils import add_one_to_counter
 
 
 def load_usage_counter() -> dict[str, int]:
@@ -36,6 +40,9 @@ def show_infos() -> None:
         print(f"{i:>4}. {command:<20} {times_used:>7}")
     print("—" * 38)
     print(f"      [bold]Total:{' ' * 15}{total:>7}[/bold]\n")
+
+    # +1 to usage counter
+    add_one_to_counter(COMMAND)
 
 
 if __name__ == "__main__":

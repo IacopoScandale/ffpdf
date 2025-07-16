@@ -4,18 +4,17 @@ from pathlib import Path
 # strings
 PACKAGE_NAME: str = "ffpdf"
 AUTHOR: str = "Iacopo Scandale"
-DESCRIPTION: str = "Fast PDF and Image Files Operations"
+DESCRIPTION: str = "Fast PDF, Image and Video File Operations"
 
-# commands
-COMMAND: str = "ffpdf"
-
-# subcommands
+# commands and subcommands
 SUBCOMMANDS: list[str] = [
+    COMMAND := "ffpdf",
     SUB_MERGE := "merge",
     SUB_SLICE := "slice",
     SUB_COUNT := "count",
     SUB_CONVERT := "convert",
     SUB_IMG := "img",
+    SUB_VID := "vid",
     # SUB_FORMAT := "format",
     # SUB_RAW := "raw",
 ]

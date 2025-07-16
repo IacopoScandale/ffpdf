@@ -4,13 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ffpdf"
-version = "2025.07.13"
-description = "Fast PDF and Image File Operations"
+version = "2025.07.14"
+description = "Fast PDF, Image and Video File Operations"
 readme = "README.md"
 requires-python = ">=3.12"
 authors = [{ name = "Iacopo Scandale", email = "iacopo.scandale.is@gmail.com" }]
 license = { file = "LICENSE" }
 dependencies = [
+    "ffmpeg-python>=0.2.0",
     "pdf2image>=1.17.0",
     "pillow>=11.2.1",
     "pycryptodome>=3.23.0",

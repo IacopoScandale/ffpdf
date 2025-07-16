@@ -6,7 +6,8 @@ from .comm_merge import comm_merge
 from .comm_slice import comm_slice
 from .comm_count import comm_count
 from .comm_convert import comm_convert
-from .comm_img import comm_img_info
+from .comm_img import comm_img
+from .comm_vid import comm_vid
 from .data.strings import (
     DESCRIPTION,
     SUB_CONVERT,
@@ -14,6 +15,7 @@ from .data.strings import (
     SUB_SLICE,
     SUB_COUNT,
     SUB_IMG,
+    SUB_VID,
 )
 
 
@@ -112,17 +114,31 @@ def parse_arguments() -> Namespace:
     )
 
 
-    # subcommand `img_info`
-    parser_img_info: ArgumentParser = subparsers.add_parser(
+    # subcommand `img`
+    parser_img: ArgumentParser = subparsers.add_parser(
         SUB_IMG,
         description="Show relevant image infos for the input files"
     )
-    parser_img_info.add_argument(
+    parser_img.add_argument(
         "in_files",
         nargs="+",
         type=Path,
-        help="Input pdf or img file(s)",
+        help="Input file(s)",
     )
+
+
+    # subcommand `vid`
+    parser_vid: ArgumentParser = subparsers.add_parser(
+        SUB_VID,
+        description="Show relevant video infos for the input files"
+    )
+    parser_vid.add_argument(
+        "in_files",
+        nargs="+",
+        type=Path,
+        help="Input file(s)",
+    )
+
 
     args: Namespace = parser.parse_args()
     return args
@@ -146,6 +162,8 @@ def main() -> None:
     elif args.subcommand == SUB_CONVERT:
         comm_convert(args.in_files, args.extension)
     elif args.subcommand == SUB_IMG:
-        comm_img_info(args.in_files)
+        comm_img(args.in_files)
+    elif args.subcommand == SUB_VID:
+        comm_vid(args.in_files)
     else:
         show_infos()
