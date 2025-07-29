@@ -1,23 +1,22 @@
 import os
-from math import gcd
+import sys
 from pathlib import Path
+from typing import NoReturn
 
 from PIL import Image, UnidentifiedImageError
 from rich import print
 
 from .data.strings import SUB_IMG
-from .data.utils import add_one_to_counter, expand_input_paths, human_readable_dimensions, human_readable_size
+from .data.utils import (
+    add_one_to_counter,
+    expand_input_paths,
+    human_readable_dimensions,
+    human_readable_ratio,
+    human_readable_size,
+)
 
 
-def human_readable_ratio(width: int, height: int) -> str:
-    mcd: int = gcd(width, height)
-    if mcd == 0:
-        return "-:-"
-    h_ratio: str = f"{width // mcd}:{height // mcd}"
-    return h_ratio
-
-
-def comm_img(files: list[Path]) -> None:
+def comm_img(files: list[Path]) -> None | NoReturn:
     files: list[Path] = expand_input_paths(files)
 
     # print header
@@ -34,9 +33,6 @@ def comm_img(files: list[Path]) -> None:
         if file.is_dir():
             total_files -= 1
             continue
-        size: int = os.path.getsize(file)
-        total_size += size
-        h_size: str = human_readable_size(size)
         try:
             with Image.open(file) as img:
                 width, height = img.size
@@ -44,23 +40,28 @@ def comm_img(files: list[Path]) -> None:
             h_dim: str = human_readable_dimensions(width, height)
             h_ratio: str = human_readable_ratio(width, height)
 
+            size: int = os.path.getsize(file)
+            total_size += size
+            h_size: str = human_readable_size(size)
+
             print(
-                f"{h_size:>10}{' ' * 2}{h_dim:>13}{' ' * 2}{h_ratio:>10}{' ' * 4}{f"'{file.name}'":<30}"
+                f"{h_size:>10}{' ' * 2}{h_dim:>13}{' ' * 2}{h_ratio:>10}{' ' * 4}{repr(file.name):<30}"
             )
 
         except UnidentifiedImageError:
+            total_files -= 1
             print(
-                f"{h_size:>10}{' ' * 2}{'':>13}{' ' * 2}{'':>10}{' ' * 4}{f"'{file.name}'":<30}"
+                f"{'':>10}{' ' * 2}{'':>13}{' ' * 2}{'':>10}{' ' * 4}{f"[bright_black]'{file.name}'[/bright_black]":<30}"
             )
 
-        except Exception as e:
-            print(f"{h_size:>10}{repr(e):<25}{' ' * 4}{f"'{file.name}'":<30}")
+        except KeyboardInterrupt:
+            sys.exit(1)
 
     # print footer
     if files and total_files > 1:
         print("—" * 70)  # em dash line separator
         print(
-            f"{human_readable_size(total_size):>10}{' ' * 2}{'':>13}{' ' * 2}{'':>10}{' ' * 4}{f"'{total_files} files'":<30}"
+            f"{human_readable_size(total_size):>10}{' ' * 2}{'':>13}{' ' * 2}{'':>10}{' ' * 4}{f"'{total_files} images'":<30}"
         )
 
     # +1 to usage counter

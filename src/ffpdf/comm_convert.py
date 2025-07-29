@@ -46,7 +46,9 @@ def comm_convert(
 
         # case: no conversion needed
         if file.suffix.lower() == ext:
-            print(f"[yellow]Skipped  [/yellow] '{file}' [black](no conversion is needed)[/black]")
+            print(
+                f"[yellow]Skipped  [/yellow] '{file}' [bright_black](no conversion is needed)[/bright_black]"
+            )
             continue
 
         # convert pdf to image
@@ -71,6 +73,9 @@ def comm_convert(
         else:
             try:
                 img = Image.open(file)
+                # handle .png to .jpg
+                if img.mode == "RGBA":
+                    img = img.convert("RGB")
                 img.save(new_filename)
                 print(f"Converted '{file}' to '{new_filename}'")
             except ValueError as e:

@@ -3,21 +3,25 @@ import json
 import os
 import sys
 import tempfile
+from math import gcd
 from pathlib import Path
 from typing import NoReturn
 
-from PIL import Image
+import ffmpeg
+from PIL import Image, UnidentifiedImageError
 from PyPDF2 import PdfReader
 
 from .strings import (
     DIR_TMP,
     FILE_COUNTER_JSON,
+    SEP_DIM,
+    SEP_RATIO,
 )
 
 
 def is_image(filepath: str | Path) -> bool:
     """
-    Returns `True` whether `filepath` is an image file (i.e. its suffix 
+    Returns `True` whether `filepath` is an image file (i.e. its suffix
     is in {".png", ".jpg", ".jpeg", ".bmp", ".tiff"}); `False` otherwise
     """
     if isinstance(filepath, str):
@@ -35,9 +39,9 @@ def flush_tmp_dir():
 
 def convert_image_to_pdf(img_path: str | Path) -> Path:
     """
-    If `img_path` is an image (i.e. its suffix is in {".png", ".jpg", 
+    If `img_path` is an image (i.e. its suffix is in {".png", ".jpg",
     ".jpeg", ".bmp", ".tiff"}) the function converts the image in a temp
-    pdf and returns the path of the temporary file (that will be in 
+    pdf and returns the path of the temporary file (that will be in
     `DIR_TEMP` folder)
     """
     # ensure Path obj as input
@@ -117,13 +121,83 @@ def expand_input_paths(paths: list[Path]) -> list[Path]:
 
 
 def human_readable_dimensions(width: int, height: int) -> str:
-    h_dimensions: str = f"{width}×{height}"
+    # use unicode x to use proper rich print colors
+    h_dimensions: str = f"{width}{SEP_DIM}{height}"
     return h_dimensions
 
 
+def ratio(num: int, denom: int) -> tuple[int, int]:
+    mcd: int = gcd(num, denom)
+    if mcd == 0:
+        return (0, 0)
+    return (num // mcd, denom // mcd)
 
 
+def human_readable_ratio(num: int, denom: int) -> str:
+    a, b = ratio(num, denom)
+    if (a, b) == (0, 0):
+        return f"-{SEP_RATIO}-"
+    return f"{a}{SEP_RATIO}{b}"
 
+
+def human_readable_size_percentage(size: int, compressed_size: int) -> str:
+    return f"{round(100 * compressed_size / size, 1)} %"
+
+
+def human_readable_fps(fps: float, show_unit: bool = True) -> str:
+    if show_unit:
+        return f"{fps} fps"
+    else:
+        return f"{fps}"
+
+
+def ffprobe_video_file(file: Path) -> tuple[int, int, int, float, float, int]:
+    """
+    Raises
+    ------
+    - `ValueError`: if input `file` is an image
+    - `ffmpeg.Error`: if input `file` cannot be probed
+    - `StopIteration`: if input `file` has no video streams
+
+    Returns
+    -------
+    tuple[int, int, int, float, float, int]
+        (size (bytes), width (px), height (px), fps, duration (s),
+        bitrate (bits/s))
+    """
+    # if it is an image then skip because probe gives problems
+    try:
+        Image.open(file)
+        raise ValueError("Cannot probe an Image")
+
+    except UnidentifiedImageError:
+        # then it is not an image and probe cannot get confused
+        pass
+
+    # probe file: raises ffmpeg.Error if it fails
+    probe = ffmpeg.probe(file)
+
+    size: int = os.path.getsize(file)
+
+    # read metadata (raises StopIteration) if it fails
+    video_stream = next(
+        stream for stream in probe["streams"] if stream["codec_type"] == "video"
+    )
+
+    width: int = int(video_stream["width"])
+    height: int = int(video_stream["height"])
+    # calculate fps
+    fps_str: str = video_stream["r_frame_rate"]  # e.g., "30000/1001"
+    num, denom = fps_str.split("/")
+    fps: float = round(float(num) / float(denom), 2)
+    duration: float = (
+        float(video_stream["duration"])
+        if "duration" in video_stream
+        else float(probe["format"]["duration"])
+    )
+    bitrate: int = int(probe["format"]["bit_rate"])  # bits/sec
+
+    return (size, width, height, fps, duration, bitrate)
 
 
 # old functions
@@ -135,9 +209,6 @@ def must_end_with_pdf(fname: str) -> str:
     if not fname.endswith(".pdf"):
         return fname + ".pdf"
     return fname
-
-
-
 
 
 def choose_out_pdf_name() -> str | NoReturn:

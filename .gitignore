@@ -4,6 +4,6 @@ __pycache__
 ffpdf.egg-info
 usage_counter.json
 src/test/*
-comm_format.py
 comm_raw.py
 TODO.md
+src/ffpdf/data/tmp/*
