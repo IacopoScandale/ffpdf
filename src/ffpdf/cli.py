@@ -1,20 +1,20 @@
 from argparse import ArgumentParser, ArgumentTypeError, Namespace
 from pathlib import Path
 
-from .__main__ import show_infos
-from .comm_compress_img import comm_compress_img
-from .comm_compress_vid import comm_compress_vid
-from .comm_convert import comm_convert
-from .comm_count import comm_count
-from .comm_dimensions import comm_dimensions
-from .comm_extensions import comm_extensions
-from .comm_fix_img_orientation import comm_fix_img_orientation
-from .comm_format import comm_format
-from .comm_img import comm_img
-from .comm_merge import comm_merge
-from .comm_slice import comm_slice
-from .comm_vid import comm_vid
-from .data.strings import (
+from ffpdf.__main__ import show_infos
+from ffpdf.commands.comm_compress_img import comm_compress_img
+from ffpdf.commands.comm_compress_vid import comm_compress_vid
+from ffpdf.commands.comm_convert import comm_convert
+from ffpdf.commands.comm_count import comm_count
+from ffpdf.commands.comm_dimensions import comm_dimensions
+from ffpdf.commands.comm_extensions import comm_extensions
+from ffpdf.commands.comm_fix_img_orientation import comm_fix_img_orientation
+from ffpdf.commands.comm_format import comm_format
+from ffpdf.commands.comm_img import comm_img
+from ffpdf.commands.comm_merge import comm_merge
+from ffpdf.commands.comm_slice import comm_slice
+from ffpdf.commands.comm_vid import comm_vid
+from ffpdf.data.strings import (
     COMMAND,
     DESCRIPTION,
     SUB_COMPRESS,

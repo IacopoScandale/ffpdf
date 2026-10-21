@@ -4,8 +4,8 @@ Use to print dimensions of perfect ratios
 
 from rich import print
 
-from .data.strings import SEP_RATIO, SUB_DIM
-from .data.utils import add_one_to_counter
+from ffpdf.data.strings import SEP_RATIO, SUB_DIM
+from ffpdf.data.utils import add_one_to_counter
 
 
 def comm_dimensions(
@@ -42,7 +42,7 @@ def comm_dimensions(
     else:
         # default values
         closest_k: int = 400
-        n: int = 49
+        n = 49
 
     # print dimensions
     lo, hi = max(1, closest_k - n), max(1, closest_k + n)

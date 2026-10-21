@@ -5,8 +5,8 @@ from pdf2image.exceptions import PDFPageCountError
 from PIL import Image, UnidentifiedImageError
 from rich import print
 
-from .data.strings import SUB_CONVERT
-from .data.utils import add_one_to_counter, expand_input_paths
+from ffpdf.data.strings import SUB_CONVERT
+from ffpdf.data.utils import add_one_to_counter, expand_input_paths
 
 
 def new_ext_filename(file: Path, ext: str) -> Path:
@@ -56,18 +56,19 @@ def comm_convert(
             try:
                 images: list[Image.Image] = convert_from_path(file)
             except PDFPageCountError as e:
-                print(f"[red]Error[/red] with '{file}': {repr(e)}")
+                print(f"[red]Error[/red] with '{file}': {e!r}")
                 continue
 
             # just for style (e.g., 123 -> 3 chars, 89 -> 2 chars ...)
             num_chars: int = len(str(len(images)))
             try:
+                i = 0
                 for i, img in enumerate(images, 1):
                     cur_file: str = f"{file.name}_page_{i:{num_chars}d}{ext}"
                     img.save(new_filename.with_name(cur_file))
                 print(f"Converted '{file}' ({i} pages) to '{ext}'")
             except ValueError as e:
-                print(f"[red]Error[/red] with '{file}': {repr(e)}")
+                print(f"[red]Error[/red] with '{file}': {e!r}")
 
         # convert image to image or image to pdf
         else:
@@ -79,9 +80,9 @@ def comm_convert(
                 img.save(new_filename)
                 print(f"Converted '{file}' to '{new_filename}'")
             except ValueError as e:
-                print(f"[red]Error[/red] with '{file}': {repr(e)}")
+                print(f"[red]Error[/red] with '{file}': {e!r}")
             except UnidentifiedImageError as e:
-                print(f"[red]Error[/red] with '{file}': {repr(e)}")
+                print(f"[red]Error[/red] with '{file}': {e!r}")
 
     # +1 to usage counter
     add_one_to_counter(SUB_CONVERT)

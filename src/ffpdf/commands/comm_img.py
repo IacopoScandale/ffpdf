@@ -1,13 +1,12 @@
 import os
 import sys
 from pathlib import Path
-from typing import NoReturn
 
 from PIL import Image, UnidentifiedImageError
 from rich import print
 
-from .data.strings import SUB_IMG
-from .data.utils import (
+from ffpdf.data.strings import SUB_IMG
+from ffpdf.data.utils import (
     add_one_to_counter,
     expand_input_paths,
     human_readable_dimensions,
@@ -16,7 +15,7 @@ from .data.utils import (
 )
 
 
-def comm_img(files: list[Path]) -> None | NoReturn:
+def comm_img(files: list[Path]) -> None:
     files = expand_input_paths(files)
 
     # print header
@@ -45,7 +44,7 @@ def comm_img(files: list[Path]) -> None | NoReturn:
             h_size: str = human_readable_size(size)
 
             print(
-                f"{h_size:>10}{' ' * 2}{h_dim:>13}{' ' * 2}{h_ratio:>10}{' ' * 4}{repr(file.name):<30}"
+                f"{h_size:>10}{' ' * 2}{h_dim:>13}{' ' * 2}{h_ratio:>10}{' ' * 4}{file.name!r:<30}"
             )
 
         except UnidentifiedImageError:

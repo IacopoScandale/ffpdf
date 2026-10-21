@@ -3,8 +3,8 @@ from pathlib import Path
 
 from rich import print
 
-from .data.strings import SUB_EXT
-from .data.utils import add_one_to_counter
+from ffpdf.data.strings import SUB_EXT
+from ffpdf.data.utils import add_one_to_counter
 
 
 def print_content_line(

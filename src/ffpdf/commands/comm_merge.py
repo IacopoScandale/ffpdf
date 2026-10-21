@@ -2,8 +2,8 @@ from pathlib import Path
 
 from PyPDF2 import PdfReader, PdfWriter
 
-from .data.strings import SUB_MERGE
-from .data.utils import (
+from ffpdf.data.strings import SUB_MERGE
+from ffpdf.data.utils import (
     add_one_to_counter,
     choose_out_pdf_name,
     convert_image_to_pdf,
@@ -13,12 +13,12 @@ from .data.utils import (
 )
 
 
-def comm_merge(files: list[str], out_pdf: Path | None = None) -> None:
-    files: list[Path] = expand_input_paths(files)
+def comm_merge(files: list[Path], out_pdf: Path | None = None) -> None:
+    files = expand_input_paths(files)
     # print(files)
 
     if not out_pdf:
-        out_pdf: Path = Path(choose_out_pdf_name())
+        out_pdf = Path(choose_out_pdf_name())
 
     # writer object to write pages
     writer = PdfWriter()
@@ -32,7 +32,9 @@ def comm_merge(files: list[str], out_pdf: Path | None = None) -> None:
 
         # read every pdf page and add it to the writer
         reader = PdfReader(file)
-        readers.append(reader)  # save in memory to avoid overwriting it due to lazy loading
+        readers.append(
+            reader
+        )  # save in memory to avoid overwriting it due to lazy loading
 
         for page in reader.pages:
             writer.add_page(page)

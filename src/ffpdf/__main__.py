@@ -2,14 +2,14 @@ import json
 
 from rich import print
 
-from .data.strings import (
+from ffpdf.data.strings import (
     COMMAND,
     DESCRIPTION,
     FILE_COUNTER_JSON,
     PACKAGE_NAME,
     SUBCOMMANDS,
 )
-from .data.utils import add_one_to_counter
+from ffpdf.data.utils import add_one_to_counter
 
 
 def load_usage_counter() -> dict[str, int]:
@@ -28,7 +28,7 @@ def show_infos() -> None:
     TODO
     """
     # load user usage-counter dict and show package infos
-    usage_counter: list[str, int] = load_usage_counter()
+    usage_counter: dict[str, int] = load_usage_counter()
 
     print(f'{PACKAGE_NAME} python package: "{DESCRIPTION}"')
     print(f"\n[bold]Commands:[/bold]{' ' * 14}[bold]Times Used:[/bold]")

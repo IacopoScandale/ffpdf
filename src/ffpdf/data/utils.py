@@ -5,13 +5,12 @@ import sys
 import tempfile
 from math import gcd
 from pathlib import Path
-from typing import NoReturn
 
 import ffmpeg
 from PIL import Image, UnidentifiedImageError
 from PyPDF2 import PdfReader
 
-from .strings import (
+from ffpdf.data.strings import (
     DIR_TMP,
     FILE_COUNTER_JSON,
     SEP_DIM,
@@ -25,7 +24,7 @@ def is_image(filepath: str | Path) -> bool:
     is in {".png", ".jpg", ".jpeg", ".bmp", ".tiff"}); `False` otherwise
     """
     if isinstance(filepath, str):
-        filepath: Path = Path(filepath)
+        filepath = Path(filepath)
     return filepath.suffix.lower() in {".png", ".jpg", ".jpeg", ".bmp", ".tiff"}
 
 
@@ -83,7 +82,7 @@ def add_one_to_counter(command_name: str) -> None:
         json.dump(usage_counter, jsonfile, indent=2)
 
 
-def human_readable_size(size_bytes: int) -> str:
+def human_readable_size(size_bytes: float) -> str:
     """
     Examples
     --------
@@ -211,7 +210,7 @@ def must_end_with_pdf(fname: str) -> str:
     return fname
 
 
-def choose_out_pdf_name() -> str | NoReturn:
+def choose_out_pdf_name() -> str:
     """
     This function lets you choose a pdf output name.
     - If the name already exists then it asks you whether to overwrite it.

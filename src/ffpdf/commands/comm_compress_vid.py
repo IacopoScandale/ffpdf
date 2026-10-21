@@ -3,7 +3,6 @@ import shlex
 import subprocess
 import sys
 from pathlib import Path
-from typing import NoReturn
 
 import ffmpeg
 from rich import print, progress
@@ -59,7 +58,7 @@ def comm_compress_vid(
     files: list[Path],
     ffmpeg_command: str,
     delete_inputs: bool = False,
-) -> None | NoReturn:
+) -> None:
     """
     Apply `ffmpeg_command` to the input videos only, skipping images and
     other files, and on output each filename is mapped
@@ -76,7 +75,7 @@ def comm_compress_vid(
         during processing. As a result, only the new files will remain
         at the end.
     """
-    files: list[Path] = expand_input_paths(files)
+    files = expand_input_paths(files)
 
     # print header
     if files:

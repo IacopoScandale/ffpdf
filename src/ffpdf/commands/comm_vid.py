@@ -5,8 +5,8 @@ from pathlib import Path
 import ffmpeg
 from rich import print
 
-from .data.strings import SUB_VID
-from .data.utils import (
+from ffpdf.data.strings import SUB_VID
+from ffpdf.data.utils import (
     add_one_to_counter,
     expand_input_paths,
     ffprobe_video_file,
@@ -16,7 +16,7 @@ from .data.utils import (
 )
 
 
-def human_readable_bitrate(bitrate: int) -> str:
+def human_readable_bitrate(bitrate: float) -> str:
     """
     Examples
     --------
@@ -43,7 +43,7 @@ def human_readable_duration(seconds: float) -> str:
     >>> human_readable_duration(123456)
         '10:17:36'
     """
-    seconds = int(round(seconds))
+    seconds = round(seconds)
     if seconds < 3600:
         return time.strftime("%M:%S", time.gmtime(seconds))
     else:
@@ -67,7 +67,7 @@ def print_content_line(
 
 
 def comm_vid(files: list[Path]) -> None:
-    files: list[Path] = expand_input_paths(files)
+    files = expand_input_paths(files)
 
     # print header
     if files:

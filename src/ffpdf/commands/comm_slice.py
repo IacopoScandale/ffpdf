@@ -4,8 +4,8 @@ from pathlib import Path
 from PyPDF2 import PdfReader, PdfWriter
 from rich import print
 
-from .data.strings import SUB_SLICE
-from .data.utils import add_one_to_counter
+from ffpdf.data.strings import SUB_SLICE
+from ffpdf.data.utils import add_one_to_counter
 
 
 # TODO: fn written a while ago. It works, but it could be improved...

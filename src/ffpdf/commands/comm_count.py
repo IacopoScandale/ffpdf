@@ -4,8 +4,8 @@ from pathlib import Path
 from PyPDF2.errors import EmptyFileError, FileNotDecryptedError
 from rich import print
 
-from .data.strings import SUB_COUNT
-from .data.utils import (
+from ffpdf.data.strings import SUB_COUNT
+from ffpdf.data.utils import (
     add_one_to_counter,
     count_pdf_pages,
     expand_input_paths,
@@ -37,6 +37,7 @@ def comm_count(pdfs: list[Path]) -> None:
             )
             continue
 
+        h_size = ""
         try:
             page_number: int = count_pdf_pages(pdf)
             total_pages += page_number
@@ -59,7 +60,7 @@ def comm_count(pdfs: list[Path]) -> None:
             )
         except Exception as e:
             print(
-                f"[red]{'x':>5}[/red]{' ' * 4}{h_size:>10}{' ' * 4} [red]Error[/red] with '{pdf.name}' {repr(e)}"
+                f"[red]{'x':>5}[/red]{' ' * 4}{h_size:>10}{' ' * 4} [red]Error[/red] with '{pdf.name}' {e!r}"
             )
 
     # print footer

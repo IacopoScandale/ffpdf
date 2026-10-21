@@ -2,8 +2,8 @@ from pathlib import Path
 
 from rich import print
 
-from .data.strings import SUB_FORMAT
-from .data.utils import add_one_to_counter, expand_input_paths
+from ffpdf.data.strings import SUB_FORMAT
+from ffpdf.data.utils import add_one_to_counter, expand_input_paths
 
 
 def print_content_line(filename: str = "", new_filename: str = "") -> None:
