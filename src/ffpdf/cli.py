@@ -93,6 +93,13 @@ def parse_arguments() -> Namespace:
     # main command
     parser = ArgumentParser(description=DESCRIPTION)
 
+    parser.add_argument(
+        "-p",
+        "--preview",
+        action="store_true",
+        help="Open the file with the default application, without saving the output to disk",
+    )
+
     # subcommands
     subparsers = parser.add_subparsers(dest="subcommand")
 
@@ -380,7 +387,7 @@ def main() -> None:
 
     # Execute appropriate function based on the command
     if args.subcommand == SUB_MERGE:
-        comm_merge(args.files, args.output)
+        comm_merge(args.files, args.output, args.preview)
     elif args.subcommand == SUB_SLICE:
         comm_slice(args.in_pdf, args.slice, args.out_pdf)
     elif args.subcommand == SUB_COUNT:

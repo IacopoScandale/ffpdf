@@ -1,6 +1,7 @@
 import glob
 import json
 import os
+import subprocess
 import sys
 import tempfile
 from math import gcd
@@ -18,6 +19,27 @@ from ffpdf.data.strings import (
 )
 
 
+def bright_black(text) -> str:
+    """
+    returns bright black text
+    """
+    return f"\033[90m{text}\033[0m"
+
+
+def open_result_in_default_app(path: Path) -> None:
+    """
+    Open file `path` with the OS default application
+    """
+    if sys.platform.startswith("linux"):
+        subprocess.Popen(["xdg-open", str(path)])
+    elif sys.platform == "darwin":
+        subprocess.Popen(["open", str(path)])
+    elif sys.platform == "win32":
+        os.startfile(path)
+    else:
+        raise OSError(f"Platform '{sys.platform}' not supported")
+
+
 def is_image(filepath: str | Path) -> bool:
     """
     Returns `True` whether `filepath` is an image file (i.e. its suffix
@@ -28,7 +50,7 @@ def is_image(filepath: str | Path) -> bool:
     return filepath.suffix.lower() in {".png", ".jpg", ".jpeg", ".bmp", ".tiff"}
 
 
-def flush_tmp_dir():
+def flush_tmp_dir() -> None:
     """
     Removes all temporary files in `DIR_TMP` directory
     """
