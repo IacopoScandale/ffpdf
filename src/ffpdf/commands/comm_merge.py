@@ -6,13 +6,13 @@ from PyPDF2 import PdfReader, PdfWriter
 from ffpdf.data.strings import SUB_MERGE
 from ffpdf.data.utils import (
     add_one_to_counter,
-    bright_black,
     choose_out_pdf_name,
     convert_image_to_pdf,
     expand_input_paths,
     flush_tmp_dir,
     is_image,
     open_result_in_default_app,
+    text_muted,
 )
 
 
@@ -29,7 +29,7 @@ def comm_merge(
     readers = []
 
     for i, file in enumerate(files, start=1):
-        print(bright_black(f"[{i:>{width}}/{total}] adding {file}"))
+        print(text_muted(f"[{i:>{width}}/{total}] adding {file}"))
 
         # convert images found in pdf tmp files
         if is_image(file):

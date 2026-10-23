@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import Any
 
 from PIL import Image, UnidentifiedImageError
-from rich import print
 
 from ffpdf.data.strings import COMMAND, SUB_COMPRESS
 from ffpdf.data.utils import (
@@ -15,6 +14,7 @@ from ffpdf.data.utils import (
     human_readable_size,
     human_readable_size_percentage,
     ratio,
+    text_muted,
 )
 
 
@@ -26,7 +26,7 @@ def print_content_line(
     new_dim: str = "",
     size_ratio: str = "",
     filename: str = "",
-    black: bool = False,
+    color_gray: bool = False,
 ) -> None:
     """
     print this command output line
@@ -43,8 +43,8 @@ def print_content_line(
         + f"{filename:<30}"
     )
 
-    if black:
-        line: str = "[bright_black]" + line + "[/bright_black]"
+    if color_gray:
+        line: str = text_muted(line)
 
     print(line)
 
@@ -120,7 +120,7 @@ def comm_compress_img(
         if file.name.startswith(f"{COMMAND}_"):
             print_content_line(
                 filename=f"'{file.name}'",
-                black=True,
+                color_gray=True,
             )
             total_files -= 1
             continue
@@ -138,7 +138,7 @@ def comm_compress_img(
                     print_content_line(
                         dim_ratio=h_ratio,
                         filename=f"'{file.name}'",
-                        black=True,
+                        color_gray=True,
                     )
                     continue
 
@@ -210,7 +210,7 @@ def comm_compress_img(
             total_files -= 1
             print_content_line(
                 filename=f"'{file.name}'",
-                black=True,
+                color_gray=True,
             )
             continue
 

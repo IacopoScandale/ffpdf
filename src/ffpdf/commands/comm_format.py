@@ -1,9 +1,7 @@
 from pathlib import Path
 
-from rich import print
-
 from ffpdf.data.strings import SUB_FORMAT
-from ffpdf.data.utils import add_one_to_counter, expand_input_paths
+from ffpdf.data.utils import add_one_to_counter, expand_input_paths, text_muted
 
 
 def print_content_line(filename: str = "", new_filename: str = "") -> None:
@@ -43,16 +41,12 @@ def comm_format(
                 old_prefix, new_prefix, *_ = prefix.split(arrow)
                 # case input prefix is "->"
                 if (not old_prefix) and (not new_prefix):
-                    print_content_line(
-                        filename=f"[bright_black]'{file.name}'[/bright_black]"
-                    )
+                    print_content_line(filename=text_muted(f"'{file.name}'"))
                     continue
                 if new_file.stem.startswith(old_prefix):
                     new_stem: str = new_file.stem.replace(old_prefix, new_prefix, 1)
                     if not new_stem:
-                        print_content_line(
-                            filename=f"[bright_black]'{file.name}'[/bright_black]"
-                        )
+                        print_content_line(filename=text_muted(f"'{file.name}'"))
                         continue
                     new_file = new_file.with_stem(new_stem)
 
@@ -67,18 +61,14 @@ def comm_format(
                 old_suffix, new_suffix, *_ = suffix.split(arrow)
                 # case input suffix is "->"
                 if (not old_suffix) and (not new_suffix):
-                    print_content_line(
-                        filename=f"[bright_black]'{file.name}'[/bright_black]"
-                    )
+                    print_content_line(filename=text_muted(f"'{file.name}'"))
                     continue
                 if new_file.stem.endswith(old_suffix):
                     new_stem: str = new_file.stem[::-1].replace(
                         old_suffix[::-1], new_suffix[::-1], 1
                     )[::-1]
                     if not new_stem:
-                        print_content_line(
-                            filename=f"[bright_black]'{file.name}'[/bright_black]"
-                        )
+                        print_content_line(filename=text_muted(f"'{file.name}'"))
                         continue
                     new_file = new_file.with_stem(new_stem)
 
@@ -88,7 +78,7 @@ def comm_format(
 
         # if nothing changed or I cannot overwrite if existing
         if (new_file == file) or (new_file.exists() and not replace_files):
-            print_content_line(filename=f"[bright_black]'{file.name}'[/bright_black]")
+            print_content_line(filename=text_muted(file.name))
         else:
             try:
                 file.replace(new_file)
@@ -100,9 +90,7 @@ def comm_format(
             except OSError as e:
                 print(f"{new_file.name = }")
                 print(repr(e))
-                print_content_line(
-                    filename=f"[bright_black]'{file.name}'[/bright_black]"
-                )
+                print_content_line(filename=text_muted(f"'{file.name}'"))
 
     # print footer
     if total_files > 1:

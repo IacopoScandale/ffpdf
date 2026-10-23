@@ -1,21 +1,19 @@
 from collections import Counter
 from pathlib import Path
 
-from rich import print
-
 from ffpdf.data.strings import SUB_EXT
-from ffpdf.data.utils import add_one_to_counter
+from ffpdf.data.utils import add_one_to_counter, text_success
 
 
 def print_content_line(
     ext: str = "",
     count: int | str = "",
-    color: str | None = None,
+    success: bool = False,
 ) -> None:
     sep: str = " " * 4
     line: str = f"{ext:>9}{sep}{count:<5}"
-    if color:
-        line: str = f"[{color}]" + line + f"[/{color}]"
+    if success:
+        line = text_success(line)
     print(line)
 
 
@@ -40,7 +38,7 @@ def comm_extensions() -> None:
     # print footer
     print("—" * 30)
     print_content_line(
-        ext=f"{len(ext_freq)} ext", count=f"{total_count} files", color="green"
+        ext=f"{len(ext_freq)} ext", count=f"{total_count} files", success=True
     )
 
     # +1 to usage counter

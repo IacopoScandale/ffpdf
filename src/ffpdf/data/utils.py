@@ -19,11 +19,39 @@ from ffpdf.data.strings import (
 )
 
 
-def bright_black(text) -> str:
+def text_muted(text: object) -> str:
     """
-    returns bright black text
+    returns muted text representation for secondary informations (bright black)
     """
     return f"\033[90m{text}\033[0m"
+
+
+def text_bold(text: object) -> str:
+    """
+    returns bold text representation
+    """
+    return f"\033[1m{text}\033[0m"
+
+
+def text_success(text: object) -> str:
+    """
+    returns success color text representation
+    """
+    return f"\033[92m{text}\033[0m"
+
+
+def text_warning(text: object) -> str:
+    """
+    returns warning color text representation
+    """
+    return f"\033[93m{text}\033[0m"
+
+
+def text_error(text: object) -> str:
+    """
+    returns error color text representation
+    """
+    return f"\033[91m{text}\033[0m"
 
 
 def open_result_in_default_app(path: Path) -> None:
@@ -142,7 +170,6 @@ def expand_input_paths(paths: list[Path]) -> list[Path]:
 
 
 def human_readable_dimensions(width: int, height: int) -> str:
-    # use unicode x to use proper rich print colors
     h_dimensions: str = f"{width}{SEP_DIM}{height}"
     return h_dimensions
 

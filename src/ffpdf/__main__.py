@@ -1,7 +1,5 @@
 import json
 
-from rich import print
-
 from ffpdf.data.strings import (
     COMMAND,
     DESCRIPTION,
@@ -9,7 +7,7 @@ from ffpdf.data.strings import (
     PACKAGE_NAME,
     SUBCOMMANDS,
 )
-from ffpdf.data.utils import add_one_to_counter
+from ffpdf.data.utils import add_one_to_counter, text_bold
 
 
 def load_usage_counter() -> dict[str, int]:
@@ -31,7 +29,7 @@ def show_infos() -> None:
     usage_counter: dict[str, int] = load_usage_counter()
 
     print(f'{PACKAGE_NAME} python package: "{DESCRIPTION}"')
-    print(f"\n[bold]Commands:[/bold]{' ' * 14}[bold]Times Used:[/bold]")
+    print(f"{text_bold('Commands:')}{' ' * 14}{text_bold('Times Used:')}")
     print("—" * 38)
     total: int = 0
     for i, command in enumerate(SUBCOMMANDS, 1):
@@ -39,7 +37,7 @@ def show_infos() -> None:
         total += times_used
         print(f"{i:>4}. {command:<20} {times_used:>7}")
     print("—" * 38)
-    print(f"      [bold]Total:{' ' * 15}{total:>7}[/bold]\n")
+    print(f"      {text_bold(f'Total:{' ' * 15}{total:>7}')}\n")
 
     # +1 to usage counter
     add_one_to_counter(COMMAND)

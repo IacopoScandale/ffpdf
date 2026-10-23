@@ -3,7 +3,6 @@ import sys
 from pathlib import Path
 
 from PIL import Image, UnidentifiedImageError
-from rich import print
 
 from ffpdf.data.strings import SUB_IMG
 from ffpdf.data.utils import (
@@ -12,6 +11,7 @@ from ffpdf.data.utils import (
     human_readable_dimensions,
     human_readable_ratio,
     human_readable_size,
+    text_muted,
 )
 
 
@@ -50,7 +50,7 @@ def comm_img(files: list[Path]) -> None:
         except UnidentifiedImageError:
             total_files -= 1
             print(
-                f"{'':>10}{' ' * 2}{'':>13}{' ' * 2}{'':>10}{' ' * 4}{f"[bright_black]'{file.name}'[/bright_black]":<30}"
+                f"{'':>10}{' ' * 2}{'':>13}{' ' * 2}{'':>10}{' ' * 4}{text_muted(file.name):<30}"
             )
 
         except KeyboardInterrupt:

@@ -3,7 +3,6 @@ import time
 from pathlib import Path
 
 import ffmpeg
-from rich import print
 
 from ffpdf.data.strings import SUB_VID
 from ffpdf.data.utils import (
@@ -13,6 +12,7 @@ from ffpdf.data.utils import (
     human_readable_dimensions,
     human_readable_ratio,
     human_readable_size,
+    text_muted,
 )
 
 
@@ -95,7 +95,7 @@ def comm_vid(files: list[Path]) -> None:
         try:
             size, width, height, fps, duration, bitrate = ffprobe_video_file(file)
         except (ValueError, ffmpeg.Error, StopIteration):
-            print_content_line(filename=f"[bright_black]'{file.name}'[/bright_black]")
+            print_content_line(filename=text_muted(file.name))
             continue
         except KeyboardInterrupt:
             sys.exit()

@@ -2,8 +2,6 @@
 Use to print dimensions of perfect ratios
 """
 
-from rich import print
-
 from ffpdf.data.strings import SEP_RATIO, SUB_DIM
 from ffpdf.data.utils import add_one_to_counter
 

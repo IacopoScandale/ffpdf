@@ -5,7 +5,6 @@ import sys
 from pathlib import Path
 
 import ffmpeg
-from rich import print, progress
 
 from ffpdf.data.strings import COMMAND, FILE_LAST_FFMPEG_OUT, SUB_COMPRESS, SUB_VID
 from ffpdf.data.utils import (
@@ -17,6 +16,7 @@ from ffpdf.data.utils import (
     human_readable_ratio,
     human_readable_size,
     human_readable_size_percentage,
+    text_muted,
 )
 
 
@@ -38,7 +38,8 @@ def print_content_line(
     print this command output line
     """
     if error:
-        print(f"    [bright_black]{error:<83}{filename:<30}[/bright_black]")
+        msg = f"{error:<83}{filename:<30}"
+        print(f"\r\033[K    {text_muted(msg)}")
     else:
         sep: str = " " * 2
         arrow_size: str = "—>" if size and new_size else ""
@@ -80,7 +81,8 @@ def comm_compress_vid(
     # print header
     if files:
         print(
-            f"[bright_black]See ffmpeg output log at '{FILE_LAST_FFMPEG_OUT}'[/bright_black]\n"
+            text_muted(f"See ffmpeg output log at '{FILE_LAST_FFMPEG_OUT}'"),
+            end="\n\n",
         )
         print_content_line(
             size="Size",
@@ -104,103 +106,92 @@ def comm_compress_vid(
     with FILE_LAST_FFMPEG_OUT.open("w", encoding="utf-8") as _:
         pass
 
-    with progress.Progress(
-        progress.TextColumn("[progress.description]{task.description}"),
-        progress.BarColumn(bar_width=40, complete_style="green"),
-        progress.TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
-        progress.TimeElapsedColumn(),
-        progress.TimeRemainingColumn(),
-    ) as p:
-        task = p.add_task("Processing files...", total=len(files))
+    for idx, file in enumerate(files, start=1):
+        pct = (idx / len(files)) * 100
+        print(f"\r\033[K[{idx}/{len(files)}] {pct:>3.0f}% Processing '{file.name}'...", end="", flush=True)
 
-        for file in files:
-            p.update(
-                task, description=f"Processing [green]'{file.name}'[/green]", advance=1
-            )
+        # skip directories
+        if file.is_dir():
+            continue
 
-            # skip directories
-            if file.is_dir():
-                continue
-
-            # skip files starting with 'ffpdf_'
-            if file.name.startswith(f"{COMMAND}_"):
-                print_content_line(
-                    error=f"Skipped (file starts with {COMMAND}_)",
-                    filename=f"[bright_black]'{file.name}'[/bright_black]",
-                )
-                continue
-
-            # get input file info to print or skip if it is not a video
-            try:
-                size_in, width_in, height_in, fps_in, *_ = ffprobe_video_file(file)
-            except (ValueError, ffmpeg.Error, StopIteration):
-                print_content_line(
-                    filename=f"[bright_black]'{file.name}'[/bright_black]"
-                )
-                continue
-            except KeyboardInterrupt:
-                sys.exit()
-
-            # do not use ffmpeg api to accept cli command arguments
-            new_file: Path = file.with_name(f"{COMMAND}_{file.name}")
-            ffmpeg_cmd: list[str] = (
-                ["ffmpeg", "-i", file, "-y", "-hide_banner", "-map_metadata", "0"]
-                + shlex.split(ffmpeg_command)
-                + [new_file]
-            )
-
-            # run ffmpeg and append log to FILE_LAST_FFMPEG_OUT file
-            with FILE_LAST_FFMPEG_OUT.open("a", encoding="utf-8") as ffmpeg_log:
-                try:
-                    subprocess.run(
-                        ffmpeg_cmd,
-                        check=True,  # raise subprocess.CalledProcessError
-                        stdout=ffmpeg_log,
-                        stderr=subprocess.STDOUT,
-                    )
-                except subprocess.CalledProcessError:
-                    # print(f"Skipped file '{file.name}': {repr(e)}")
-                    # FIXME
-                    print_content_line(
-                        error="Error in --ffmpeg command (see out log)",
-                        filename=f"[bright_black]'{file.name}'[/bright_black]",
-                    )
-                    continue
-                except KeyboardInterrupt:
-                    sys.exit()
-
-            # get output file info to print or skip if it is not a video
-            try:
-                size_out, width_out, height_out, fps_out, *_ = ffprobe_video_file(
-                    new_file
-                )
-            except (ValueError, ffmpeg.Error, StopIteration):
-                print_content_line(
-                    filename=f"[bright_black]'{file.name}'[/bright_black]"
-                )
-                continue
-            except KeyboardInterrupt:
-                sys.exit()
-
-            total_files += 1
-            total_size += size_in
-            total_compressed_size += size_out
-
+        # skip files starting with 'ffpdf_'
+        if file.name.startswith(f"{COMMAND}_"):
             print_content_line(
-                size=human_readable_size(size_in),
-                new_size=human_readable_size(size_out),
-                size_ratio=human_readable_size_percentage(size_in, size_out),
-                dim_ratio=human_readable_ratio(width_in, height_in),
-                dim=human_readable_dimensions(width_in, height_in),
-                new_dim=human_readable_dimensions(width_out, height_out),
-                fps=human_readable_fps(fps_in, show_unit=False),
-                new_fps=human_readable_fps(fps_out),
-                filename=f"'{file.name}'",
+                error=f"Skipped (file starts with {COMMAND}_)",
+                filename=text_muted(f"'{file.name}'"),
             )
+            continue
 
-            # delete input files
-            if delete_inputs:
-                os.remove(file)
+        # get input file info to print or skip if it is not a video
+        try:
+            size_in, width_in, height_in, fps_in, *_ = ffprobe_video_file(file)
+        except (ValueError, ffmpeg.Error, StopIteration):
+            print_content_line(filename=text_muted(f"'{file.name}'"))
+            continue
+        except KeyboardInterrupt:
+            sys.exit()
+
+        # do not use ffmpeg api to accept cli command arguments
+        new_file: Path = file.with_name(f"{COMMAND}_{file.name}")
+        ffmpeg_cmd: list[str] = (
+            ["ffmpeg", "-i", file, "-y", "-hide_banner", "-map_metadata", "0"]
+            + shlex.split(ffmpeg_command)
+            + [new_file]
+        )
+
+        # run ffmpeg and append log to FILE_LAST_FFMPEG_OUT file
+        with FILE_LAST_FFMPEG_OUT.open("a", encoding="utf-8") as ffmpeg_log:
+            try:
+                subprocess.run(
+                    ffmpeg_cmd,
+                    check=True,  # raise subprocess.CalledProcessError
+                    stdout=ffmpeg_log,
+                    stderr=subprocess.STDOUT,
+                )
+            except subprocess.CalledProcessError:
+                # print(f"Skipped file '{file.name}': {repr(e)}")
+                # FIXME
+                print_content_line(
+                    error="Error in --ffmpeg command (see out log)",
+                    filename=text_muted(f"'{file.name}'"),
+                )
+                continue
+            except KeyboardInterrupt:
+                sys.exit()
+
+        # get output file info to print or skip if it is not a video
+        try:
+            size_out, width_out, height_out, fps_out, *_ = ffprobe_video_file(
+                new_file
+            )
+        except (ValueError, ffmpeg.Error, StopIteration):
+            print_content_line(filename=text_muted(f"'{file.name}'"))
+            continue
+        except KeyboardInterrupt:
+            sys.exit()
+
+        total_files += 1
+        total_size += size_in
+        total_compressed_size += size_out
+
+        print_content_line(
+            size=human_readable_size(size_in),
+            new_size=human_readable_size(size_out),
+            size_ratio=human_readable_size_percentage(size_in, size_out),
+            dim_ratio=human_readable_ratio(width_in, height_in),
+            dim=human_readable_dimensions(width_in, height_in),
+            new_dim=human_readable_dimensions(width_out, height_out),
+            fps=human_readable_fps(fps_in, show_unit=False),
+            new_fps=human_readable_fps(fps_out),
+            filename=f"'{file.name}'",
+        )
+
+        # delete input files
+        if delete_inputs:
+            os.remove(file)
+
+    # clear any residual progress line
+    print("\r\033[K", end="")
 
     # print footer
     if files and total_files > 1:

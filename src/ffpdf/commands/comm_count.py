@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 
 from PyPDF2.errors import EmptyFileError, FileNotDecryptedError
-from rich import print
 
 from ffpdf.data.strings import SUB_COUNT
 from ffpdf.data.utils import (
@@ -10,6 +9,8 @@ from ffpdf.data.utils import (
     count_pdf_pages,
     expand_input_paths,
     human_readable_size,
+    text_error,
+    text_muted,
 )
 
 
@@ -32,9 +33,7 @@ def comm_count(pdfs: list[Path]) -> None:
 
         # skip non-PDFs
         if pdf.suffix.lower() != ".pdf":
-            print(
-                f"{' ':>5}{' ' * 4}{' ':>10}{' ' * 4}{f"[bright_black]'{pdf.name}'[/bright_black]":<40}"
-            )
+            print(f"{' ':>5}{' ' * 4}{' ':>10}{' ' * 4}{text_muted(pdf.name):<40}")
             continue
 
         h_size = ""
@@ -52,15 +51,15 @@ def comm_count(pdfs: list[Path]) -> None:
             )
         except EmptyFileError:
             print(
-                f"[red]{'0':>5}[/red]{' ' * 4}{h_size:>10}{' ' * 4}'{pdf.name}' [bright_black](empty file)[/bright_black]"
+                f"{text_error(f'{"0":>5}')}{' ' * 4}{h_size:>10}{' ' * 4}'{pdf.name}' {text_muted('(empty file)')}"
             )
         except FileNotDecryptedError:
             print(
-                f"[red]{'?':>5}[/red]{' ' * 4}{h_size:>10}{' ' * 4} '{pdf.name}' [bright_black](encrypted file)[/bright_black]"
+                f"{text_error(f'{"?":>5}')}{' ' * 4}{h_size:>10}{' ' * 4} '{pdf.name}' {text_muted('(encrypted file)')}"
             )
         except Exception as e:
             print(
-                f"[red]{'x':>5}[/red]{' ' * 4}{h_size:>10}{' ' * 4} [red]Error[/red] with '{pdf.name}' {e!r}"
+                f"{text_error(f'{"x":>5}')}{' ' * 4}{h_size:>10}{' ' * 4} {text_error('Error')} with '{pdf.name}' {e!r}"
             )
 
     # print footer

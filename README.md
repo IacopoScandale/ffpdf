@@ -77,6 +77,10 @@ Merge the input files (PDFs or images) in an output PDF
 ```sh
 ffpdf merge a.pdf b.pdf -o ab.pdf
 ```
+Preview merged PDF in your default application without saving to disk
+```sh
+ffpdf -p merge a.pdf b.pdf
+```
 ### Slice
 Extract pages from a PDF
 ```sh
