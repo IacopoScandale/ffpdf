@@ -29,7 +29,7 @@ def human_readable_bitrate(bitrate: float) -> str:
         if bitrate < 1024:
             return f"{bitrate:.0f} {unit}"
         bitrate /= 1024
-    return f"{bitrate:.0f} Mb/s"
+    return f"{bitrate:.1f} Mb/s"
 
 
 def human_readable_duration(seconds: float) -> str:
