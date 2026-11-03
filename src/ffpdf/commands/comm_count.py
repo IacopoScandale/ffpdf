@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from PyPDF2.errors import EmptyFileError, FileNotDecryptedError
+from pypdf.errors import EmptyFileError, FileNotDecryptedError
 
 from ffpdf.data.strings import SUB_COUNT
 from ffpdf.data.utils import (

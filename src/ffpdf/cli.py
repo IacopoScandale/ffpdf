@@ -123,6 +123,13 @@ def parse_arguments() -> Namespace:
         help="Output filename",
         metavar="FILE",
     )
+    parser_merge.add_argument(
+        "--toc",
+        type=Path,
+        default=None,
+        help="Populate PDF document outline with the files used",
+        metavar="FILE",
+    )
 
     # TODO
     # subcommand `slice`
@@ -387,7 +394,7 @@ def main() -> None:
 
     # Execute appropriate function based on the command
     if args.subcommand == SUB_MERGE:
-        comm_merge(args.files, args.output, args.preview)
+        comm_merge(args.files, args.output, args.preview, args.toc)
     elif args.subcommand == SUB_SLICE:
         comm_slice(args.in_pdf, args.slice, args.out_pdf)
     elif args.subcommand == SUB_COUNT:

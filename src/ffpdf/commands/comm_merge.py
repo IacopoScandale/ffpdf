@@ -1,7 +1,7 @@
 import tempfile
 from pathlib import Path
 
-from PyPDF2 import PdfReader, PdfWriter
+from pypdf import PdfReader, PdfWriter
 
 from ffpdf.data.strings import SUB_MERGE
 from ffpdf.data.utils import (
@@ -17,8 +17,21 @@ from ffpdf.data.utils import (
 
 
 def comm_merge(
-    files: list[Path], out_pdf: Path | None = None, preview: bool = False
+    files: list[Path],
+    out_pdf: Path | None = None,
+    preview: bool = False,
+    outline: bool = False,
 ) -> None:
+    """
+    Args:
+        files: ordered list of the files to merge
+        out_pdf: name of the merged output PDF file. If None then it is
+            asked in a prompt
+        preview: open the output pdf with the OS default application,
+            without writing it into disk (write in the OS temporary dir)
+        outline: if true, populate the PDF document outline with the
+            names of the files used in the merge process
+    """
     files = expand_input_paths(files)
     total: int = len(files)
     width: int = len(str(total))

@@ -9,7 +9,7 @@ from pathlib import Path
 
 import ffmpeg
 from PIL import Image, UnidentifiedImageError
-from PyPDF2 import PdfReader
+from pypdf import PdfReader
 
 from ffpdf.data.strings import (
     DIR_TMP,

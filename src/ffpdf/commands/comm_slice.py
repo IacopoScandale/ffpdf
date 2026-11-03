@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 
-from PyPDF2 import PdfReader, PdfWriter
+from pypdf import PdfReader, PdfWriter
 
 from ffpdf.data.strings import SUB_SLICE
 from ffpdf.data.utils import add_one_to_counter
