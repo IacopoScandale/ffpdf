@@ -125,10 +125,8 @@ def parse_arguments() -> Namespace:
     )
     parser_merge.add_argument(
         "--toc",
-        type=Path,
-        default=None,
+        action="store_true",
         help="Populate PDF document outline with the files used",
-        metavar="FILE",
     )
 
     # TODO

@@ -41,8 +41,12 @@ def comm_merge(
     writer = PdfWriter()
     readers = []
 
+    current_page = 0
+    outline_nodes = {}  # keep track of created dir nodes
+
     for i, file in enumerate(files, start=1):
         print(text_muted(f"[{i:>{width}}/{total}] adding {file}"))
+        orig_file = file
 
         # convert images found in pdf tmp files
         if is_image(file):
@@ -50,12 +54,39 @@ def comm_merge(
 
         # read every pdf page and add it to the writer
         reader = PdfReader(file)
-        readers.append(
-            reader
-        )  # save in memory to avoid overwriting it due to lazy loading
+        # save in memory to avoid overwriting it due to lazy loading
+        readers.append(reader)
 
+        # current file start page number in the output PDF numbering
+        start_page = current_page
         for page in reader.pages:
             writer.add_page(page)
+            current_page += 1
+
+        # create table of contents from the input files
+        if outline and len(reader.pages) > 0:
+            parts = orig_file.parts
+            parent = None
+
+            # add hierarchical parent folders if any
+            for depth in range(1, len(parts)):
+                sub_path = parts[:depth]
+                if sub_path not in outline_nodes:
+                    folder_name = parts[depth - 1]
+                    outline_nodes[sub_path] = writer.add_outline_item(
+                        title=folder_name,
+                        page_number=start_page,
+                        parent=parent,
+                    )
+                parent = outline_nodes[sub_path]
+
+            # add current file to the document outline
+            file_name = parts[-1]
+            writer.add_outline_item(
+                title=file_name,
+                page_number=start_page,
+                parent=parent,
+            )
 
     if preview:
         with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmp_file:

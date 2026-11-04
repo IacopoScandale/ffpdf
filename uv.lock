@@ -16,7 +16,7 @@ wheels = [
 
 [[package]]
 name = "ffpdf"
-version = "2026.10.23"
+version = "2026.11.4"
 source = { editable = "." }
 dependencies = [
     { name = "ffmpeg-python" },

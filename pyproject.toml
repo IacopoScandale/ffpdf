@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ffpdf"
-version = "2026.10.23"
+version = "2026.11.04"
 description = "Fast PDF, Image and Video File Operations"
 readme = "README.md"
 requires-python = ">=3.12"
