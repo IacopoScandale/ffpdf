@@ -2,9 +2,10 @@ import sys
 from pathlib import Path
 
 from pypdf import PdfReader, PdfWriter
+from pypdf.errors import PdfReadError, PdfStreamError
 
 from ffpdf.data.strings import SUB_SLICE
-from ffpdf.data.utils import add_one_to_counter
+from ffpdf.data.utils import add_one_to_counter, text_error
 
 
 # TODO: fn written a while ago. It works, but it could be improved...
@@ -71,6 +72,12 @@ def slice_to_list(slice_: str) -> list[int]:
 
 def comm_slice(in_pdf: Path, slice_: str, out_pdf: Path) -> None:
     reader: PdfReader = PdfReader(in_pdf)
+    try:
+        reader = PdfReader(in_pdf)
+    except (PdfReadError, PdfStreamError):
+        print(f"{text_error('Error:')} cannot read file '{in_pdf.name}'")
+        return
+
     writer: PdfWriter = PdfWriter()
 
     page_numbers: list[int] = slice_to_list(slice_)

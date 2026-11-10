@@ -10,6 +10,7 @@ from pathlib import Path
 import ffmpeg
 from PIL import Image, UnidentifiedImageError
 from pypdf import PdfReader
+from pypdf.errors import PdfReadError, PdfStreamError
 
 from ffpdf.data.strings import (
     DIR_TMP,
@@ -110,7 +111,12 @@ def count_pdf_pages(pdf: Path) -> int:
     """
     Returns the number of pages of the input pdf
     """
-    pdf_reader: PdfReader = PdfReader(pdf)
+    try:
+        pdf_reader = PdfReader(pdf)
+    except (PdfReadError, PdfStreamError):
+        print(f"{text_error('Error:')} cannot read file '{pdf.name}'")
+        return 0
+
     return len(pdf_reader.pages)
 
 

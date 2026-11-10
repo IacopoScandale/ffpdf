@@ -2,6 +2,7 @@ import tempfile
 from pathlib import Path
 
 from pypdf import PdfReader, PdfWriter
+from pypdf.errors import PdfReadError, PdfStreamError
 
 from ffpdf.data.strings import SUB_MERGE
 from ffpdf.data.utils import (
@@ -12,6 +13,7 @@ from ffpdf.data.utils import (
     flush_tmp_dir,
     is_image,
     open_result_in_default_app,
+    text_error,
     text_muted,
 )
 
@@ -53,7 +55,12 @@ def comm_merge(
             file = convert_image_to_pdf(file)
 
         # read every pdf page and add it to the writer
-        reader = PdfReader(file)
+        try:
+            reader = PdfReader(file)
+        except (PdfReadError, PdfStreamError):
+            print(f"{text_error('Error:')} cannot read file '{file.name}'")
+            continue
+
         # save in memory to avoid overwriting it due to lazy loading
         readers.append(reader)
 
